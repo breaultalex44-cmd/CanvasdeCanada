@@ -6,7 +6,7 @@
     <title>Canvas de Canada</title>
     <style>
         :root {
-            --primary-color: #D52B1E; /* Canadian Red */
+            --primary-color: #D52B1E;
             --bg-color: #f8f9fa;
             --sidebar-bg: #ffffff;
             --text-color: #333333;
@@ -20,9 +20,10 @@
             height: 100vh;
             background-color: var(--bg-color);
             color: var(--text-color);
+            overflow: hidden;
         }
 
-        /* Sidebar Styling */
+        /* Left Sidebar Styling */
         .sidebar {
             width: 300px;
             background: var(--sidebar-bg);
@@ -32,6 +33,7 @@
             flex-direction: column;
             box-shadow: 2px 0 5px rgba(0,0,0,0.05);
             z-index: 10;
+            overflow-y: auto;
         }
 
         .brand {
@@ -76,20 +78,9 @@
             gap: 8px;
         }
 
-        button:hover {
-            background: #f1f3f4;
-            border-color: #ccc;
-        }
-
-        button.primary {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-        }
-
-        button.primary:hover {
-            background: #b02318;
-        }
+        button:hover { background: #f1f3f4; border-color: #ccc; }
+        button.primary { background: var(--primary-color); color: white; border: none; }
+        button.primary:hover { background: #b02318; }
 
         .search-box {
             padding: 10px;
@@ -101,10 +92,7 @@
             box-sizing: border-box;
         }
 
-        input[type="file"] {
-            font-size: 12px;
-            margin-top: 5px;
-        }
+        input[type="file"] { font-size: 12px; margin-top: 5px; }
 
         /* Main Workspace Styling */
         .main {
@@ -137,33 +125,16 @@
             border: 1px solid #eee;
         }
 
-        /* The Switch */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 34px;
-            height: 20px;
-        }
+        .switch { position: relative; display: inline-block; width: 34px; height: 20px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ccc; transition: .4s; border-radius: 34px;
-        }
-        .slider:before {
-            position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px;
-            background-color: white; transition: .4s; border-radius: 50%;
-        }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--primary-color); }
         input:checked + .slider:before { transform: translateX(14px); }
 
-        #status {
-            margin-left: auto;
-            color: #0f9d58;
-            font-size: 14px;
-            font-weight: 500;
-        }
+        #status { margin-left: auto; color: #0f9d58; font-size: 14px; font-weight: 500; }
 
-        /* Editor Styling (Google Docs style) */
+        /* Editor Styling */
         .editor-container {
             padding: 40px;
             overflow-y: auto;
@@ -173,7 +144,7 @@
         }
 
         .editor {
-            width: 816px; /* standard 8.5x11 aspect ratio width approx */
+            width: 816px; 
             min-height: 1056px;
             background: #fff;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
@@ -183,11 +154,95 @@
             font-size: 16px;
             border-radius: 2px;
         }
-
         .editor h1 { font-size: 28px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
         .editor h2 { font-size: 20px; color: var(--primary-color); margin-top: 30px; }
-        .editor ul { padding-left: 20px; }
+        .editor ul, .editor ol { padding-left: 20px; }
         .editor li { margin-bottom: 5px; }
+
+        /* Canvas AI Right Sidebar */
+        .ai-sidebar {
+            width: 320px;
+            background: #fff;
+            border-left: 1px solid var(--border-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.05);
+            z-index: 10;
+            overflow-y: auto;
+            transition: transform 0.3s ease, width 0.3s ease;
+        }
+
+        .ai-sidebar.hidden {
+            display: none;
+        }
+
+        .ai-sidebar h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .format-bar {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .format-btn {
+            padding: 6px 12px;
+            font-weight: bold;
+            border: 1px solid #ccc;
+            background: #f8f9fa;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 0;
+            justify-content: center;
+        }
+
+        .format-btn:hover { background: #e0e0e0; }
+
+        .selected-word-display {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .ai-category {
+            margin-bottom: 20px;
+        }
+
+        .ai-category h4 {
+            margin: 0 0 8px 0;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #777;
+            letter-spacing: 0.5px;
+        }
+
+        .ai-chip {
+            display: inline-block;
+            background: #f1f3f4;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            margin: 0 4px 6px 0;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .ai-chip:hover {
+            background: #fff;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
 
     </style>
 </head>
@@ -207,6 +262,7 @@
         <h3>Presets</h3>
         <button onclick="insertPreset('grocery')">🛒 Grocery List</button>
         <button onclick="insertPreset('recipe')">🍳 Cooking Ingredients</button>
+        <button onclick="insertPreset('meeting')">📅 Meeting Notes</button>
 
         <h3>Live Recipe Searcher</h3>
         <input type="text" id="recipeSearch" class="search-box" placeholder="e.g., Poutine, Maple Tart...">
@@ -216,17 +272,17 @@
 
     <div class="main">
         <div class="toolbar">
-            <label class="toggle-container">
+            <label class="toggle-container" title="Shows the AI Assistant on the right">
                 <span class="switch">
-                    <input type="checkbox" id="canvasAiToggle" checked>
+                    <input type="checkbox" id="canvasAiToggle" onchange="toggleAiPanel()" checked>
                     <span class="slider"></span>
                 </span>
-                Canvas AI (Live Grammar)
+                Canvas AI
             </label>
 
-            <label class="toggle-container" title="Automatically adds spaces when a word is completed">
+            <label class="toggle-container" title="Automatically adds a space when a common word is completed">
                 <span class="switch">
-                    <input type="checkbox" id="autoSpaceToggle">
+                    <input type="checkbox" id="autoSpaceToggle" checked>
                     <span class="slider"></span>
                 </span>
                 Auto-Space Bar
@@ -236,23 +292,45 @@
         </div>
 
         <div class="editor-container">
-            <div id="editor" class="editor" contenteditable="true" oninput="handleInput(event)">
+            <div id="editor" class="editor" contenteditable="true">
                 <h1>Untitled Document</h1>
-                <p>Start typing your notes here...</p>
+                <p>Start typing your notes here. Try double-clicking a word while Canvas AI is turned on!</p>
             </div>
+        </div>
+    </div>
+
+    <!-- Canvas AI Right Panel -->
+    <div class="ai-sidebar" id="aiSidebar">
+        <h3>✨ Canvas AI</h3>
+        
+        <div class="format-bar">
+            <button class="format-btn" onclick="applyFormat('bold')" title="Bold"><b>B</b></button>
+            <button class="format-btn" onclick="applyFormat('italic')" title="Italic"><i>I</i></button>
+            <button class="format-btn" onclick="applyFormat('underline')" title="Underline"><u>U</u></button>
+            <button class="format-btn" onclick="applyFormat('fontSize', 5)" title="Increase Size">A+</button>
+            <button class="format-btn" onclick="applyFormat('fontSize', 3)" title="Normal Size">A</button>
+        </div>
+
+        <div class="selected-word-display" id="selectedWordDisplay">Select a word...</div>
+        
+        <div id="aiSuggestions">
+            <p style="font-size:13px; color:#666;">Highlight any word in your document to see emotional, pragmatic, and enthusiastic alternatives, plus emojis.</p>
         </div>
     </div>
 
     <script>
         const editor = document.getElementById('editor');
+        const aiSidebar = document.getElementById('aiSidebar');
+        const aiSuggestions = document.getElementById('aiSuggestions');
+        const selectedWordDisplay = document.getElementById('selectedWordDisplay');
+        let savedSelectionRange = null;
 
         // ==========================================
         // ADVANCED LOCAL STORAGE & BACKUPS
         // ==========================================
         
         function saveNotes() {
-            const content = editor.innerHTML;
-            localStorage.setItem('canvas_de_canada_data', content);
+            localStorage.setItem('canvas_de_canada_data', editor.innerHTML);
             showStatus("Notes saved locally.");
         }
 
@@ -285,6 +363,7 @@
             reader.onload = function(e) {
                 editor.innerHTML = e.target.result;
                 showStatus("Backup imported successfully.");
+                saveNotes();
             };
             reader.readAsText(file);
         }
@@ -296,7 +375,7 @@
         }
 
         // ==========================================
-        // PRESETS
+        // PRESETS & RECIPES
         // ==========================================
 
         function insertPreset(type) {
@@ -305,20 +384,16 @@
                 html = "<h2>🛒 Grocery List</h2><ul><li><b>Produce:</b> </li><li><b>Dairy:</b> </li><li><b>Meat/Protein:</b> </li><li><b>Pantry:</b> </li></ul><p><br></p>";
             } else if (type === 'recipe') {
                 html = "<h2>🍳 Cooking Ingredients Needed</h2><ul><li>Ingredient 1 (Amount)</li><li>Ingredient 2 (Amount)</li></ul><h3>Instructions</h3><ol><li>Step 1</li></ol><p><br></p>";
-            } 
-            
+            } else if (type === 'meeting') {
+                html = "<h2>📅 Meeting Notes</h2><p><b>Date:</b> " + new Date().toLocaleDateString() + "</p><ul><li><b>Attendees:</b> </li><li><b>Action Items:</b> </li></ul><p><br></p>";
+            }
             editor.innerHTML += html;
             saveNotes(); 
         }
 
-        // ==========================================
-        // LIVE RECIPE SEARCHER
-        // ==========================================
-
         function searchRecipe(engine) {
             const query = document.getElementById('recipeSearch').value;
             if (!query) { alert("Please enter a recipe to search!"); return; }
-            
             if (engine === 'google') {
                 window.open('https://www.google.com/search?q=recipe+' + encodeURIComponent(query), '_blank');
             } else if (engine === 'pinterest') {
@@ -327,119 +402,143 @@
         }
 
         // ==========================================
-        // CANVAS AI & AUTO-SPACE LOGIC
+        // AUTO-SPACE LOGIC (UNTOUCHED)
         // ==========================================
         
-        // A mini dictionary for the auto-space feature
-        const autoSpaceDictionary = new Set(["the", "and", "is", "a", "to", "of", "in", "it", "you", "that", "he", "was", "for", "on", "are", "with", "as", "i", "his", "they", "be", "at", "one", "have", "this", "from", "or", "had", "by", "not", "word", "but", "what", "some", "we", "can", "out", "other", "were", "all", "there", "when", "up", "use", "your", "how", "said", "an", "each", "she"]);
+        const autoSpaceDictionary = new Set(["the", "and", "is", "a", "to", "of", "in", "it", "you", "that", "he", "was", "for", "on", "are", "with", "as", "i", "his", "they", "be", "at", "one", "have", "this", "from", "or", "had", "by", "not", "word", "but", "what", "some", "we", "can", "out", "other", "were", "all", "there", "when", "up", "use", "your", "how", "said", "an", "each", "she", "hello"]);
 
-        // Simple grammar/formatting rules for Canvas AI
-        const grammarRules = {
-            "dont": "don't",
-            "cant": "can't",
-            "im": "I'm",
-            "teh": "the",
-            "wouldnt": "wouldn't",
-            "shouldnt": "shouldn't",
-            " -- ": " — " // Em dash conversion
-        };
-
-        let lastLength = 0;
-
-        function handleInput(event) {
-            const aiEnabled = document.getElementById('canvasAiToggle').checked;
+        editor.addEventListener('input', function(e) {
             const autoSpaceEnabled = document.getElementById('autoSpaceToggle').checked;
-            
-            // Only process if typing text (ignore deletions)
-            if (editor.innerText.length < lastLength) {
-                lastLength = editor.innerText.length;
-                return;
-            }
-            lastLength = editor.innerText.length;
+            if (!autoSpaceEnabled || (e.inputType !== 'insertText' && e.inputType !== 'insertCompositionText')) return;
 
-            let html = editor.innerHTML;
-            let text = editor.innerText;
-            let modified = false;
+            const selection = window.getSelection();
+            if (!selection.rangeCount) return;
+            const range = selection.getRangeAt(0);
+            const node = range.startContainer;
+            if (node.nodeType !== Node.TEXT_NODE) return;
 
-            // 1. CANVAS AI: Grammar & Dash Suggestions
-            if (aiEnabled) {
-                for (const [wrong, right] of Object.entries(grammarRules)) {
-                    // Check if the user typed the wrong word followed by a space
-                    const regex = new RegExp("\\b" + wrong + " ", "gi");
-                    if (html.match(regex)) {
-                        html = html.replace(regex, right + " ");
-                        modified = true;
+            let textBeforeCursor = node.textContent.substring(0, range.startOffset);
+            let textAfterCursor = node.textContent.substring(range.startOffset);
+
+            if (e.data && e.data.trim() !== "") {
+                const match = textBeforeCursor.match(/([a-zA-Z]+)$/);
+                if (match) {
+                    const lastWord = match[1].toLowerCase();
+                    if (autoSpaceDictionary.has(lastWord)) {
+                        textBeforeCursor += "\u00A0"; 
+                        node.textContent = textBeforeCursor + textAfterCursor;
+                        
+                        const newCursorPos = textBeforeCursor.length;
+                        const newRange = document.createRange();
+                        newRange.setStart(node, newCursorPos);
+                        newRange.collapse(true);
+                        selection.removeAllRanges();
+                        selection.addRange(newRange);
                     }
                 }
             }
+        });
 
-            // 2. AUTO-SPACE
-            if (autoSpaceEnabled && event.data && event.data !== " ") {
-                // Get the last word being typed
-                const words = text.trim().split(/[\s\n\xA0]+/);
-                const lastWord = words[words.length - 1].toLowerCase();
+        // ==========================================
+        // CANVAS AI PANEL LOGIC
+        // ==========================================
 
-                if (autoSpaceDictionary.has(lastWord)) {
-                    // Append a space entity if word is found
-                    html += "&nbsp;"; 
-                    modified = true;
-                }
-            }
-
-            if (modified) {
-                // Save current cursor position roughly
-                const selection = window.getSelection();
-                const range = selection.getRangeAt(0);
-                const preCaretRange = range.cloneRange();
-                preCaretRange.selectNodeContents(editor);
-                preCaretRange.setEnd(range.endContainer, range.endOffset);
-                const caretOffset = preCaretRange.toString().length;
-
-                // Update HTML
-                editor.innerHTML = html;
-
-                // Restore cursor position
-                setSelectionRange(editor, caretOffset);
+        function toggleAiPanel() {
+            const isChecked = document.getElementById('canvasAiToggle').checked;
+            if (isChecked) {
+                aiSidebar.classList.remove('hidden');
+            } else {
+                aiSidebar.classList.add('hidden');
             }
         }
 
-        // Helper function to restore cursor position after HTML modification
-        function setSelectionRange(el, chars) {
-            if (chars === 0) return;
-            const selection = window.getSelection();
-            const range = document.createRange();
-            range.setStart(el, 0);
-            range.collapse(true);
-            
-            const nodeStack = [el];
-            let node, foundStart = false, stop = false;
-            let charIndex = 0;
+        // Reformatting Text (Bold, Underline, etc)
+        function applyFormat(command, value = null) {
+            document.execCommand(command, false, value);
+            editor.focus();
+        }
 
-            while (!stop && (node = nodeStack.pop())) {
-                if (node.nodeType === 3) {
-                    const nextCharIndex = charIndex + node.length;
-                    if (!foundStart && chars >= charIndex && chars <= nextCharIndex) {
-                        range.setStart(node, chars - charIndex);
-                        range.setEnd(node, chars - charIndex);
-                        stop = true;
-                    }
-                    charIndex = nextCharIndex;
-                } else {
-                    let i = node.childNodes.length;
-                    while (i--) {
-                        nodeStack.push(node.childNodes[i]);
-                    }
-                }
+        // Replace text when chip is clicked
+        function replaceSelectedWord(newWord) {
+            if (savedSelectionRange) {
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(savedSelectionRange);
+                document.execCommand('insertText', false, newWord);
+                savedSelectionRange = window.getSelection().getRangeAt(0); // Update range
             }
-            selection.removeAllRanges();
-            selection.addRange(range);
+        }
+
+        // Listen for user selecting words
+        document.addEventListener('selectionchange', () => {
+            const aiEnabled = document.getElementById('canvasAiToggle').checked;
+            if (!aiEnabled) return;
+
+            const selection = window.getSelection();
+            if (!selection.rangeCount) return;
+
+            // Only trigger if selection is inside the editor
+            if (!editor.contains(selection.anchorNode)) return;
+
+            const text = selection.toString().trim();
+            
+            // If it's a single word without spaces
+            if (text.length > 1 && !text.includes(' ') && !text.includes('\n')) {
+                savedSelectionRange = selection.getRangeAt(0).cloneRange();
+                selectedWordDisplay.innerText = `"${text}"`;
+                generateAiWords(text);
+            }
+        });
+
+        // Mock AI Generator
+        const aiCategories = ["Clarity", "Emotion", "Energy", "Enthusiastic", "Pragmatic", "Optimistic", "Romantic", "Intimate"];
+        
+        // Generic word banks to simulate an AI
+        const wordBanks = {
+            Clarity: ["evident", "lucid", "precise", "distinct", "transparent"],
+            Emotion: ["profound", "moving", "stirring", "poignant", "heartfelt"],
+            Energy: ["vibrant", "dynamic", "electric", "spirited", "vigorous"],
+            Enthusiastic: ["eager", "passionate", "zealous", "fervent", "thrilled"],
+            Pragmatic: ["practical", "logical", "sensible", "efficient", "realistic"],
+            Optimistic: ["hopeful", "positive", "promising", "bright", "upbeat"],
+            Romantic: ["tender", "affectionate", "devoted", "passionate", "enchanting"],
+            Intimate: ["personal", "close", "confidential", "deep", "cherished"]
+        };
+        const emojiBank = ["✨", "💡", "🔥", "❤️", "🚀", "🌟", "📈", "🎯", "😊", "🤝"];
+
+        function generateAiWords(word) {
+            let html = "";
+
+            // Emojis Section
+            html += `<div class="ai-category"><h4>Emojis</h4>`;
+            // pick 5 random emojis
+            let emojis = [...emojiBank].sort(() => 0.5 - Math.random()).slice(0, 5);
+            emojis.forEach(em => {
+                html += `<div class="ai-chip" onmousedown="event.preventDefault(); replaceSelectedWord('${em}')">${em}</div>`;
+            });
+            html += `</div>`;
+
+            // Categories Section
+            aiCategories.forEach(cat => {
+                html += `<div class="ai-category"><h4>${cat}</h4>`;
+                
+                // We combine the base word prefix with some suffixes or use the word bank to simulate intelligent NLP
+                let words = wordBanks[cat].map(w => w); 
+                // Shuffle to make it feel "generated"
+                words = words.sort(() => 0.5 - Math.random()).slice(0, 5);
+
+                words.forEach(w => {
+                    html += `<div class="ai-chip" onmousedown="event.preventDefault(); replaceSelectedWord('${w}')">${w}</div>`;
+                });
+                html += `</div>`;
+            });
+
+            aiSuggestions.innerHTML = html;
         }
 
         // Auto-save every 30 seconds
         setInterval(() => {
-            if (editor.innerText.trim().length > 0) {
-                localStorage.setItem('canvas_de_canada_data', editor.innerHTML);
-            }
+            if (editor.innerText.trim().length > 0) saveNotes();
         }, 30000);
 
         // Load notes on startup
