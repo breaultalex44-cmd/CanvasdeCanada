@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas de Canada</title>
+    <style>
+        :root {
+            --primary-color: #D52B1E; /* Canadian Red */
+            --bg-color: #f8f9fa;
+            --sidebar-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 300px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+        .brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .sidebar h3 {
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #777;
+            margin: 20px 0 10px 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border-color);
+            background: #fff;
+            color: #333;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background: #f1f3f4;
+            border-color: #ccc;
+        }
+
+        button.primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        button.primary:hover {
+            background: #b02318;
+        }
+
+        .search-box {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="file"] {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        /* Main Workspace Styling */
+        .main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .toolbar {
+            height: 60px;
+            background: #fff;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            gap: 20px;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background: #f8f9fa;
+            border: 1px solid #eee;
+        }
+
+        /* The Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 34px;
+            height: 20px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc; transition: .4s; border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px;
+            background-color: white; transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--primary-color); }
+        input:checked + .slider:before { transform: translateX(14px); }
+
+        #status {
+            margin-left: auto;
+            color: #0f9d58;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Editor Styling (Google Docs style) */
+        .editor-container {
+            padding: 40px;
+            overflow-y: auto;
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .editor {
+            width: 816px; /* standard 8.5x11 aspect ratio width approx */
+            min-height: 1056px;
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            padding: 70px;
+            outline: none;
+            line-height: 1.6;
+            font-size: 16px;
+            border-radius: 2px;
+        }
+
+        .editor h1 { font-size: 28px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .editor h2 { font-size: 20px; color: var(--primary-color); margin-top: 30px; }
+        .editor ul { padding-left: 20px; }
+        .editor li { margin-bottom: 5px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="brand">🍁 Canvas</div>
+        <div class="subtitle">de Canada</div>
+
+        <h3>Advanced Storage</h3>
+        <button class="primary" onclick="saveNotes()">💾 Save to Local Storage</button>
+        <button onclick="loadNotes()">📂 Load from Local</button>
+        <button onclick="exportBackup()">⬇️ Download Backup (.html)</button>
+        <label style="font-size: 12px; color: #666; margin-top: 10px;">Import Backup:</label>
+        <input type="file" id="importFile" accept=".html,.txt" onchange="importBackup(event)">
+
+        <h3>Presets</h3>
+        <button onclick="insertPreset('grocery')">🛒 Grocery List</button>
+        <button onclick="insertPreset('recipe')">🍳 Cooking Ingredients</button>
+
+        <h3>Live Recipe Searcher</h3>
+        <input type="text" id="recipeSearch" class="search-box" placeholder="e.g., Poutine, Maple Tart...">
+        <button onclick="searchRecipe('google')">🔍 Search Google</button>
+        <button onclick="searchRecipe('pinterest')">📌 Search Pinterest</button>
+    </div>
+
+    <div class="main">
+        <div class="toolbar">
+            <label class="toggle-container">
+                <span class="switch">
+                    <input type="checkbox" id="canvasAiToggle" checked>
+                    <span class="slider"></span>
+                </span>
+                Canvas AI (Live Grammar)
+            </label>
+
+            <label class="toggle-container" title="Automatically adds spaces when a word is completed">
+                <span class="switch">
+                    <input type="checkbox" id="autoSpaceToggle">
+                    <span class="slider"></span>
+                </span>
+                Auto-Space Bar
+            </label>
+
+            <span id="status"></span>
+        </div>
+
+        <div class="editor-container">
+            <div id="editor" class="editor" contenteditable="true" oninput="handleInput(event)">
+                <h1>Untitled Document</h1>
+                <p>Start typing your notes here...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const editor = document.getElementById('editor');
+
+        // ==========================================
+        // ADVANCED LOCAL STORAGE & BACKUPS
+        // ==========================================
+        
+        function saveNotes() {
+            const content = editor.innerHTML;
+            localStorage.setItem('canvas_de_canada_data', content);
+            showStatus("Notes saved locally.");
+        }
+
+        function loadNotes() {
+            const content = localStorage.getItem('canvas_de_canada_data');
+            if (content) {
+                editor.innerHTML = content;
+                showStatus("Notes successfully loaded.");
+            } else {
+                showStatus("No saved notes found.");
+            }
+        }
+
+        function exportBackup() {
+            const content = editor.innerHTML; 
+            const blob = new Blob([content], { type: "text/html" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "Canvas_Backup_" + new Date().getTime() + ".html";
+            a.click();
+            URL.revokeObjectURL(url);
+            showStatus("Backup downloaded.");
+        }
+
+        function importBackup(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                editor.innerHTML = e.target.result;
+                showStatus("Backup imported successfully.");
+            };
+            reader.readAsText(file);
+        }
+
+        function showStatus(msg) {
+            const status = document.getElementById('status');
+            status.innerText = msg;
+            setTimeout(() => status.innerText = "", 4000);
+        }
+
+        // ==========================================
+        // PRESETS
+        // ==========================================
+
+        function insertPreset(type) {
+            let html = "";
+            if (type === 'grocery') {
+                html = "<h2>🛒 Grocery List</h2><ul><li><b>Produce:</b> </li><li><b>Dairy:</b> </li><li><b>Meat/Protein:</b> </li><li><b>Pantry:</b> </li></ul><p><br></p>";
+            } else if (type === 'recipe') {
+                html = "<h2>🍳 Cooking Ingredients Needed</h2><ul><li>Ingredient 1 (Amount)</li><li>Ingredient 2 (Amount)</li></ul><h3>Instructions</h3><ol><li>Step 1</li></ol><p><br></p>";
+            } 
+            
+            editor.innerHTML += html;
+            saveNotes(); 
+        }
+
+        // ==========================================
+        // LIVE RECIPE SEARCHER
+        // ==========================================
+
+        function searchRecipe(engine) {
+            const query = document.getElementById('recipeSearch').value;
+            if (!query) { alert("Please enter a recipe to search!"); return; }
+            
+            if (engine === 'google') {
+                window.open('https://www.google.com/search?q=recipe+' + encodeURIComponent(query), '_blank');
+            } else if (engine === 'pinterest') {
+                window.open('https://www.pinterest.com/search/pins/?q=' + encodeURIComponent(query + ' recipe'), '_blank');
+            }
+        }
+
+        // ==========================================
+        // CANVAS AI & AUTO-SPACE LOGIC
+        // ==========================================
+        
+        // A mini dictionary for the auto-space feature
+        const autoSpaceDictionary = new Set(["the", "and", "is", "a", "to", "of", "in", "it", "you", "that", "he", "was", "for", "on", "are", "with", "as", "i", "his", "they", "be", "at", "one", "have", "this", "from", "or", "had", "by", "not", "word", "but", "what", "some", "we", "can", "out", "other", "were", "all", "there", "when", "up", "use", "your", "how", "said", "an", "each", "she"]);
+
+        // Simple grammar/formatting rules for Canvas AI
+        const grammarRules = {
+            "dont": "don't",
+            "cant": "can't",
+            "im": "I'm",
+            "teh": "the",
+            "wouldnt": "wouldn't",
+            "shouldnt": "shouldn't",
+            " -- ": " — " // Em dash conversion
+        };
+
+        let lastLength = 0;
+
+        function handleInput(event) {
+            const aiEnabled = document.getElementById('canvasAiToggle').checked;
+            const autoSpaceEnabled = document.getElementById('autoSpaceToggle').checked;
+            
+            // Only process if typing text (ignore deletions)
+            if (editor.innerText.length < lastLength) {
+                lastLength = editor.innerText.length;
+                return;
+            }
+            lastLength = editor.innerText.length;
+
+            let html = editor.innerHTML;
+            let text = editor.innerText;
+            let modified = false;
+
+            // 1. CANVAS AI: Grammar & Dash Suggestions
+            if (aiEnabled) {
+                for (const [wrong, right] of Object.entries(grammarRules)) {
+                    // Check if the user typed the wrong word followed by a space
+                    const regex = new RegExp("\\b" + wrong + " ", "gi");
+                    if (html.match(regex)) {
+                        html = html.replace(regex, right + " ");
+                        modified = true;
+                    }
+                }
+            }
+
+            // 2. AUTO-SPACE
+            if (autoSpaceEnabled && event.data && event.data !== " ") {
+                // Get the last word being typed
+                const words = text.trim().split(/[\s\n\xA0]+/);
+                const lastWord = words[words.length - 1].toLowerCase();
+
+                if (autoSpaceDictionary.has(lastWord)) {
+                    // Append a space entity if word is found
+                    html += "&nbsp;"; 
+                    modified = true;
+                }
+            }
+
+            if (modified) {
+                // Save current cursor position roughly
+                const selection = window.getSelection();
+                const range = selection.getRangeAt(0);
+                const preCaretRange = range.cloneRange();
+                preCaretRange.selectNodeContents(editor);
+                preCaretRange.setEnd(range.endContainer, range.endOffset);
+                const caretOffset = preCaretRange.toString().length;
+
+                // Update HTML
+                editor.innerHTML = html;
+
+                // Restore cursor position
+                setSelectionRange(editor, caretOffset);
+            }
+        }
+
+        // Helper function to restore cursor position after HTML modification
+        function setSelectionRange(el, chars) {
+            if (chars === 0) return;
+            const selection = window.getSelection();
+            const range = document.createRange();
+            range.setStart(el, 0);
+            range.collapse(true);
+            
+            const nodeStack = [el];
+            let node, foundStart = false, stop = false;
+            let charIndex = 0;
+
+            while (!stop && (node = nodeStack.pop())) {
+                if (node.nodeType === 3) {
+                    const nextCharIndex = charIndex + node.length;
+                    if (!foundStart && chars >= charIndex && chars <= nextCharIndex) {
+                        range.setStart(node, chars - charIndex);
+                        range.setEnd(node, chars - charIndex);
+                        stop = true;
+                    }
+                    charIndex = nextCharIndex;
+                } else {
+                    let i = node.childNodes.length;
+                    while (i--) {
+                        nodeStack.push(node.childNodes[i]);
+                    }
+                }
+            }
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+        // Auto-save every 30 seconds
+        setInterval(() => {
+            if (editor.innerText.trim().length > 0) {
+                localStorage.setItem('canvas_de_canada_data', editor.innerHTML);
+            }
+        }, 30000);
+
+        // Load notes on startup
+        window.onload = () => {
+            const content = localStorage.getItem('canvas_de_canada_data');
+            if (content) { editor.innerHTML = content; }
+        };
+    </script>
+</body>
+</html>
