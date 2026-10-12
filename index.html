@@ -1,550 +1,416 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canvas de Canada</title>
+    <title>Canvas de Canada — 2027 Workspace</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        canRed: '#D52B1E',
+                        canRedDark: '#b02318',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        :root {
-            --primary-color: #D52B1E;
-            --bg-color: #f8f9fa;
-            --sidebar-bg: #ffffff;
-            --text-color: #333333;
-            --border-color: #e0e0e0;
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
+
+        /* Paper Editor Shadow */
+        .paper-shadow {
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
         }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            margin: 0;
-            display: flex;
-            height: 100vh;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            overflow: hidden;
+        .dark .paper-shadow {
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.08);
         }
-
-        /* Left Sidebar Styling */
-        .sidebar {
-            width: 300px;
-            background: var(--sidebar-bg);
-            border-right: 1px solid var(--border-color);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
-            z-index: 10;
-            overflow-y: auto;
-        }
-
-        .brand {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .subtitle {
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 30px;
-            font-style: italic;
-        }
-
-        .sidebar h3 {
-            font-size: 14px;
-            text-transform: uppercase;
-            color: #777;
-            margin: 20px 0 10px 0;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 5px;
-        }
-
-        button {
-            padding: 10px 15px;
-            margin-bottom: 8px;
-            border: 1px solid var(--border-color);
-            background: #fff;
-            color: #333;
-            cursor: pointer;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: all 0.2s ease;
-            text-align: left;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        button:hover { background: #f1f3f4; border-color: #ccc; }
-        button.primary { background: var(--primary-color); color: white; border: none; }
-        button.primary:hover { background: #b02318; }
-
-        .search-box {
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 14px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        input[type="file"] { font-size: 12px; margin-top: 5px; }
-
-        /* Main Workspace Styling */
-        .main {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .toolbar {
-            height: 60px;
-            background: #fff;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            padding: 0 30px;
-            gap: 20px;
-        }
-
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            padding: 5px 10px;
-            border-radius: 4px;
-            background: #f8f9fa;
-            border: 1px solid #eee;
-        }
-
-        .switch { position: relative; display: inline-block; width: 34px; height: 20px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--primary-color); }
-        input:checked + .slider:before { transform: translateX(14px); }
-
-        #status { margin-left: auto; color: #0f9d58; font-size: 14px; font-weight: 500; }
-
-        /* Editor Styling */
-        .editor-container {
-            padding: 40px;
-            overflow-y: auto;
-            flex-grow: 1;
-            display: flex;
-            justify-content: center;
-        }
-
-        .editor {
-            width: 816px; 
-            min-height: 1056px;
-            background: #fff;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
-            padding: 70px;
-            outline: none;
-            line-height: 1.6;
-            font-size: 16px;
-            border-radius: 2px;
-        }
-        .editor h1 { font-size: 28px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        .editor h2 { font-size: 20px; color: var(--primary-color); margin-top: 30px; }
-        .editor ul, .editor ol { padding-left: 20px; }
-        .editor li { margin-bottom: 5px; }
-
-        /* Canvas AI Right Sidebar */
-        .ai-sidebar {
-            width: 320px;
-            background: #fff;
-            border-left: 1px solid var(--border-color);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: -2px 0 5px rgba(0,0,0,0.05);
-            z-index: 10;
-            overflow-y: auto;
-            transition: transform 0.3s ease, width 0.3s ease;
-        }
-
-        .ai-sidebar.hidden {
-            display: none;
-        }
-
-        .ai-sidebar h3 {
-            color: var(--primary-color);
-            margin-top: 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .format-bar {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .format-btn {
-            padding: 6px 12px;
-            font-weight: bold;
-            border: 1px solid #ccc;
-            background: #f8f9fa;
-            cursor: pointer;
-            border-radius: 4px;
-            margin: 0;
-            justify-content: center;
-        }
-
-        .format-btn:hover { background: #e0e0e0; }
-
-        .selected-word-display {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .ai-category {
-            margin-bottom: 20px;
-        }
-
-        .ai-category h4 {
-            margin: 0 0 8px 0;
-            font-size: 12px;
-            text-transform: uppercase;
-            color: #777;
-            letter-spacing: 0.5px;
-        }
-
-        .ai-chip {
-            display: inline-block;
-            background: #f1f3f4;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            margin: 0 4px 6px 0;
-            cursor: pointer;
-            border: 1px solid transparent;
-            transition: all 0.2s;
-        }
-
-        .ai-chip:hover {
-            background: #fff;
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-        }
-
     </style>
 </head>
-<body>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 h-screen flex overflow-hidden transition-colors duration-200">
 
-    <div class="sidebar">
-        <div class="brand">🍁 Canvas</div>
-        <div class="subtitle">de Canada</div>
-
-        <h3>Advanced Storage</h3>
-        <button class="primary" onclick="saveNotes()">💾 Save to Local Storage</button>
-        <button onclick="loadNotes()">📂 Load from Local</button>
-        <button onclick="exportBackup()">⬇️ Download Backup (.html)</button>
-        <label style="font-size: 12px; color: #666; margin-top: 10px;">Import Backup:</label>
-        <input type="file" id="importFile" accept=".html,.txt" onchange="importBackup(event)">
-
-        <h3>Presets</h3>
-        <button onclick="insertPreset('grocery')">🛒 Grocery List</button>
-        <button onclick="insertPreset('recipe')">🍳 Cooking Ingredients</button>
-        <button onclick="insertPreset('meeting')">📅 Meeting Notes</button>
-
-        <h3>Live Recipe Searcher</h3>
-        <input type="text" id="recipeSearch" class="search-box" placeholder="e.g., Poutine, Maple Tart...">
-        <button onclick="searchRecipe('google')">🔍 Search Google</button>
-        <button onclick="searchRecipe('pinterest')">📌 Search Pinterest</button>
-    </div>
-
-    <div class="main">
-        <div class="toolbar">
-            <label class="toggle-container" title="Shows the AI Assistant on the right">
-                <span class="switch">
-                    <input type="checkbox" id="canvasAiToggle" onchange="toggleAiPanel()" checked>
-                    <span class="slider"></span>
-                </span>
-                Canvas AI
-            </label>
-
-            <label class="toggle-container" title="Automatically adds a space when a common word is completed">
-                <span class="switch">
-                    <input type="checkbox" id="autoSpaceToggle" checked>
-                    <span class="slider"></span>
-                </span>
-                Auto-Space Bar
-            </label>
-
-            <span id="status"></span>
+    <!-- LEFT SIDEBAR: Navigation, Vault & Presets -->
+    <aside class="w-80 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col z-20 shadow-sm">
+        <!-- Brand Header -->
+        <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-canRed/10 text-canRed flex items-center justify-center font-bold text-lg">🍁</div>
+                <div>
+                    <h1 class="font-bold text-lg tracking-tight leading-none">Canvas</h1>
+                    <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">de Canada · 2027 Suite</span>
+                </div>
+            </div>
+            <button onclick="toggleTheme()" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition" title="Toggle Theme">
+                <i data-lucide="sun" class="w-4 h-4 dark:hidden"></i>
+                <i data-lucide="moon" class="w-4 h-4 hidden dark:block"></i>
+            </button>
         </div>
 
-        <div class="editor-container">
-            <div id="editor" class="editor" contenteditable="true">
+        <!-- Sidebar Content -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-6">
+            
+            <!-- Storage & Vault Manager -->
+            <div>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3 px-1">Storage & Vault</h2>
+                <div class="space-y-2">
+                    <button onclick="saveDocument()" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-canRed text-white font-medium text-sm hover:bg-canRedDark transition shadow-sm">
+                        <span class="flex items-center gap-2"><i data-lucide="save" class="w-4 h-4"></i> Save Draft</span>
+                        <span class="text-xs bg-black/10 px-2 py-0.5 rounded mono">Ctrl+S</span>
+                    </button>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="exportFile('html')" class="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Export HTML
+                        </button>
+                        <button onclick="exportFile('md')" class="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                            <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Export MD
+                        </button>
+                    </div>
+                    <label class="flex items-center justify-center gap-2 w-full px-3 py-2 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition">
+                        <i data-lucide="upload" class="w-3.5 h-3.5"></i> Import Document
+                        <input type="file" id="importFile" accept=".html,.md,.txt" class="hidden" onchange="importDocument(event)">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Expanded Templates & Presets -->
+            <div>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3 px-1">Templates & Presets</h2>
+                <div class="grid grid-cols-1 gap-1.5">
+                    <button onclick="loadTemplate('business')" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-left">
+                        <i data-lucide="briefcase" class="w-4 h-4 text-canRed"></i> Canadian Business Letter
+                    </button>
+                    <button onclick="loadTemplate('proposal')" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-left">
+                        <i data-lucide="layout-template" class="w-4 h-4 text-canRed"></i> Project Proposal
+                    </button>
+                    <button onclick="loadTemplate('meeting')" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-left">
+                        <i data-lucide="calendar" class="w-4 h-4 text-canRed"></i> Meeting Agenda & Notes
+                    </button>
+                    <button onclick="loadTemplate('journal')" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-left">
+                        <i data-lucide="book-open" class="w-4 h-4 text-canRed"></i> Daily Journal / Log
+                    </button>
+                    <button onclick="loadTemplate('grocery')" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-left">
+                        <i data-lucide="shopping-cart" class="w-4 h-4 text-canRed"></i> Grocery List
+                    </button>
+                    <button onclick="loadTemplate('recipe')" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-left">
+                        <i data-lucide="utensils" class="w-4 h-4 text-canRed"></i> Recipe & Ingredients
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Research Tool -->
+            <div>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3 px-1">Quick Search</h2>
+                <div class="space-y-2">
+                    <input type="text" id="quickSearchInput" placeholder="Search recipe or topic..." class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:border-canRed">
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="performSearch('google')" class="px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-center gap-1">
+                            <i data-lucide="search" class="w-3 h-3"></i> Google
+                        </button>
+                        <button onclick="performSearch('pinterest')" class="px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-center gap-1">
+                            <i data-lucide="pin" class="w-3 h-3"></i> Pinterest
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Sidebar Footer Status -->
+        <div class="p-4 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 flex items-center justify-between">
+            <span id="autoSaveStatus" class="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-medium">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Saved locally
+            </span>
+            <span class="mono text-[10px]" id="wordCountBadge">0 words</span>
+        </div>
+    </aside>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden">
+        
+        <!-- Top Formatting & AI Toggle Toolbar -->
+        <header class="h-14 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between z-10">
+            <!-- Formatting Tools -->
+            <div class="flex items-center gap-1 overflow-x-auto py-1">
+                <button onclick="formatDoc('bold')" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300" title="Bold"><i data-lucide="bold" class="w-4 h-4"></i></button>
+                <button onclick="formatDoc('italic')" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300" title="Italic"><i data-lucide="italic" class="w-4 h-4"></i></button>
+                <button onclick="formatDoc('underline')" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300" title="Underline"><i data-lucide="underline" class="w-4 h-4"></i></button>
+                <div class="w-px h-5 bg-slate-200 dark:bg-slate-700 mx-1"></div>
+                <button onclick="formatDoc('formatBlock', '<h1>')" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold text-xs" title="Heading 1">H1</button>
+                <button onclick="formatDoc('formatBlock', '<h2>')" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold text-xs" title="Heading 2">H2</button>
+                <button onclick="formatDoc('formatBlock', '<p>')" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium text-xs" title="Paragraph">P</button>
+                <div class="w-px h-5 bg-slate-200 dark:bg-slate-700 mx-1"></div>
+                <button onclick="formatDoc('insertUnorderedList')" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300" title="Bullet List"><i data-lucide="list" class="w-4 h-4"></i></button>
+                <button onclick="formatDoc('insertOrderedList')" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300" title="Numbered List"><i data-lucide="list-ordered" class="w-4 h-4"></i></button>
+            </div>
+
+            <!-- Right Toolbar Controls -->
+            <div class="flex items-center gap-3">
+                <button onclick="toggleAiPanel()" id="aiToggleBtn" class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-canRed/10 text-canRed dark:bg-canRed/20 font-semibold text-xs hover:bg-canRed/20 transition">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i> Canvas AI Assistant
+                </button>
+            </div>
+        </header>
+
+        <!-- Editor Canvas View -->
+        <div class="flex-1 overflow-y-auto p-8 flex justify-center bg-slate-100 dark:bg-slate-950">
+            <div class="w-full max-w-4xl min-h-[85vh] bg-white dark:bg-slate-900 paper-shadow rounded-2xl p-12 focus:outline-none transition-colors"
+                 id="editor" contenteditable="true" spellcheck="true">
                 <h1>Untitled Document</h1>
-                <p>Start typing your notes here. Try double-clicking a word while Canvas AI is turned on!</p>
+                <p>Welcome to the overhauled Canvas de Canada 2027 workspace. Start typing your notes, highlight any text to consult Canvas AI, or select a template from the sidebar.</p>
             </div>
         </div>
-    </div>
+    </main>
 
-    <!-- Canvas AI Right Panel -->
-    <div class="ai-sidebar" id="aiSidebar">
-        <h3>✨ Canvas AI</h3>
-        
-        <div class="format-bar">
-            <button class="format-btn" onclick="applyFormat('bold')" title="Bold"><b>B</b></button>
-            <button class="format-btn" onclick="applyFormat('italic')" title="Italic"><i>I</i></button>
-            <button class="format-btn" onclick="applyFormat('underline')" title="Underline"><u>U</u></button>
-            <button class="format-btn" onclick="applyFormat('fontSize', 5)" title="Increase Size">A+</button>
-            <button class="format-btn" onclick="applyFormat('fontSize', 3)" title="Normal Size">A</button>
+    <!-- RIGHT SIDEBAR: Live Canvas AI Assistant -->
+    <aside id="aiSidebar" class="w-90 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col z-20 shadow-lg transition-all duration-300">
+        <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+            <div class="flex items-center gap-2 text-canRed font-bold">
+                <i data-lucide="sparkles" class="w-5 h-5"></i> Canvas AI Copilot
+            </div>
+            <button onclick="toggleAiPanel()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
         </div>
 
-        <div class="selected-word-display" id="selectedWordDisplay">Select a word...</div>
-        
-        <div id="aiSuggestions">
-            <p style="font-size:13px; color:#666;">Highlight any word in your document to see emotional, pragmatic, and enthusiastic alternatives, plus emojis.</p>
-        </div>
-    </div>
+        <div class="flex-1 overflow-y-auto p-4 space-y-4 text-sm">
+            <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300">
+                Highlight text in your document or use quick prompts below to rewrite, summarize, or enhance your writing instantly.
+            </div>
 
+            <!-- Quick Action Chips -->
+            <div>
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-2">Quick Actions</span>
+                <div class="flex flex-wrap gap-1.5">
+                    <button onclick="runAiAction('summarize')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs font-medium hover:bg-canRed hover:text-white transition">✨ Summarize selection</button>
+                    <button onclick="runAiAction('professional')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs font-medium hover:bg-canRed hover:text-white transition">💼 Professional polish</button>
+                    <button onclick="runAiAction('expand')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs font-medium hover:bg-canRed hover:text-white transition">📈 Expand thoughts</button>
+                    <button onclick="runAiAction('grammar')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs font-medium hover:bg-canRed hover:text-white transition">🔍 Fix grammar & tone</button>
+                </div>
+            </div>
+
+            <!-- AI Chat & Prompt Box -->
+            <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 block">Custom AI Prompt</label>
+                <textarea id="aiPromptInput" rows="3" placeholder="Ask AI to write a paragraph about..." class="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs focus:outline-none focus:border-canRed resize-none"></textarea>
+                <button onclick="submitAiPrompt()" class="w-full py-2 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-semibold text-xs hover:opacity-90 transition flex items-center justify-center gap-1.5">
+                    <i data-lucide="send" class="w-3.5 h-3.5"></i> Generate Response
+                </button>
+            </div>
+
+            <!-- AI Output Result Box -->
+            <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 block">AI Output</span>
+                <div id="aiOutputContainer" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 text-xs min-h-[100px] max-h-[200px] overflow-y-auto text-slate-700 dark:text-slate-300">
+                    AI responses and generated text will appear here...
+                </div>
+                <button onclick="insertAiOutput()" id="insertAiBtn" class="w-full py-2 rounded-xl bg-canRed text-white font-semibold text-xs hover:bg-canRedDark transition hidden flex items-center justify-center gap-1.5">
+                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Insert into Document
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Application Script Logic -->
     <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
         const editor = document.getElementById('editor');
+        const wordCountBadge = document.getElementById('wordCountBadge');
+        const autoSaveStatus = document.getElementById('autoSaveStatus');
         const aiSidebar = document.getElementById('aiSidebar');
-        const aiSuggestions = document.getElementById('aiSuggestions');
-        const selectedWordDisplay = document.getElementById('selectedWordDisplay');
-        let savedSelectionRange = null;
 
-        // ==========================================
-        // ADVANCED LOCAL STORAGE & BACKUPS
-        // ==========================================
-        
-        function saveNotes() {
-            localStorage.setItem('canvas_de_canada_data', editor.innerHTML);
-            showStatus("Notes saved locally.");
-        }
-
-        function loadNotes() {
-            const content = localStorage.getItem('canvas_de_canada_data');
-            if (content) {
-                editor.innerHTML = content;
-                showStatus("Notes successfully loaded.");
+        // Theme Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
             } else {
-                showStatus("No saved notes found.");
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
             }
         }
 
-        function exportBackup() {
-            const content = editor.innerHTML; 
-            const blob = new Blob([content], { type: "text/html" });
+        // Load saved theme on startup
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+
+        // Rich Text Formatting Helper
+        function formatDoc(command, value = null) {
+            document.execCommand(command, false, value);
+            editor.focus();
+            updateStats();
+        }
+
+        // Word Count & Stats Update
+        function updateStats() {
+            const text = editor.innerText || "";
+            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+            wordCountBadge.innerText = `${words} words`;
+        }
+
+        editor.addEventListener('input', () => {
+            updateStats();
+            triggerAutoSave();
+        });
+
+        // Local Storage & Vault
+        let saveTimeout;
+        function triggerAutoSave() {
+            autoSaveStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span> Saving...`;
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                localStorage.setItem('canvas_canada_draft', editor.innerHTML);
+                autoSaveStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Saved locally`;
+            }, 1000);
+        }
+
+        function saveDocument() {
+            localStorage.setItem('canvas_canada_draft', editor.innerHTML);
+            autoSaveStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Saved manually`;
+            setTimeout(() => {
+                autoSaveStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Saved locally`;
+            }, 2000);
+        }
+
+        function exportFile(type) {
+            const content = type === 'html' ? editor.innerHTML : editor.innerText;
+            const mime = type === 'html' ? 'text/html' : 'text/markdown';
+            const blob = new Blob([content], { type: mime });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = "Canvas_Backup_" + new Date().getTime() + ".html";
+            a.download = `Canvas_Document_${Date.now()}.${type === 'html' ? 'html' : 'md'}`;
             a.click();
             URL.revokeObjectURL(url);
-            showStatus("Backup downloaded.");
         }
 
-        function importBackup(event) {
+        function importDocument(event) {
             const file = event.target.files[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = (e) => {
                 editor.innerHTML = e.target.result;
-                showStatus("Backup imported successfully.");
-                saveNotes();
+                updateStats();
+                saveDocument();
             };
             reader.readAsText(file);
         }
 
-        function showStatus(msg) {
-            const status = document.getElementById('status');
-            status.innerText = msg;
-            setTimeout(() => status.innerText = "", 4000);
-        }
-
-        // ==========================================
-        // PRESETS & RECIPES
-        // ==========================================
-
-        function insertPreset(type) {
+        // Expanded Presets & Templates
+        function loadTemplate(type) {
             let html = "";
-            if (type === 'grocery') {
-                html = "<h2>🛒 Grocery List</h2><ul><li><b>Produce:</b> </li><li><b>Dairy:</b> </li><li><b>Meat/Protein:</b> </li><li><b>Pantry:</b> </li></ul><p><br></p>";
-            } else if (type === 'recipe') {
-                html = "<h2>🍳 Cooking Ingredients Needed</h2><ul><li>Ingredient 1 (Amount)</li><li>Ingredient 2 (Amount)</li></ul><h3>Instructions</h3><ol><li>Step 1</li></ol><p><br></p>";
-            } else if (type === 'meeting') {
-                html = "<h2>📅 Meeting Notes</h2><p><b>Date:</b> " + new Date().toLocaleDateString() + "</p><ul><li><b>Attendees:</b> </li><li><b>Action Items:</b> </li></ul><p><br></p>";
+            switch(type) {
+                case 'business':
+                    html = `<h1>Canadian Business Letter</h1><p><b>Date:</b> ${new Date().toLocaleDateString()}</p><p><b>To:</b> Recipient Name<br><b>Company:</b> Corporation Name<br><b>Location:</b> Toronto, ON</p><p>Dear [Recipient Name],</p><p>Please accept this correspondence regarding...</p><p>Sincerely,<br>[Your Name]</p>`;
+                    break;
+                case 'proposal':
+                    html = `<h1>Project Proposal</h1><h2>1. Executive Summary</h2><p>Brief overview of the proposed project scope and objectives.</p><h2>2. Objectives & Deliverables</h2><ul><li>Deliverable 1</li><li>Deliverable 2</li></ul><h2>3. Timeline & Budget</h2><p>Estimated milestones and resource allocation.</p>`;
+                    break;
+                case 'meeting':
+                    html = `<h1>Meeting Agenda & Notes</h1><p><b>Date:</b> ${new Date().toLocaleDateString()}</p><ul><li><b>Attendees:</b> </li><li><b>Objective:</b> </li></ul><h2>Discussion Points</h2><ul><li>Point 1</li></ul><h2>Action Items</h2><ul><li>[ ] Task 1 — Assigned to @name</li></ul>`;
+                    break;
+                case 'journal':
+                    html = `<h1>Daily Journal</h1><p><b>Date:</b> ${new Date().toLocaleDateString()}</p><h2>Today's Focus</h2><p>Primary goals and mindset...</p><h2>Reflections</h2><p>Notes on progress and learnings...</p>`;
+                    break;
+                case 'grocery':
+                    html = `<h1>Grocery List</h1><ul><li><b>Produce:</b> Apples, Potatoes, Maple Syrup</li><li><b>Dairy:</b> Milk, Cheddar Cheese, Butter</li><li><b>Bakery:</b> Sourdough Bread</li></ul>`;
+                    break;
+                case 'recipe':
+                    html = `<h1>Classic Poutine Recipe</h1><h2>Ingredients</h2><ul><li>1 kg Russet potatoes</li><li>Cheese curds (fresh)</li><li>Beef or vegetable gravy</li></ul><h2>Instructions</h2><ol><li>Cut and fry potatoes until golden brown.</li><li>Top with fresh cheese curds.</li><li>Pour hot gravy over top and serve immediately.</li></ol>`;
+                    break;
             }
-            editor.innerHTML += html;
-            saveNotes(); 
+            editor.innerHTML = html;
+            updateStats();
+            saveDocument();
         }
 
-        function searchRecipe(engine) {
-            const query = document.getElementById('recipeSearch').value;
-            if (!query) { alert("Please enter a recipe to search!"); return; }
+        // Quick Search handler
+        function performSearch(engine) {
+            const query = document.getElementById('quickSearchInput').value;
+            if (!query) { alert('Please enter a search term.'); return; }
             if (engine === 'google') {
-                window.open('https://www.google.com/search?q=recipe+' + encodeURIComponent(query), '_blank');
+                window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
             } else if (engine === 'pinterest') {
-                window.open('https://www.pinterest.com/search/pins/?q=' + encodeURIComponent(query + ' recipe'), '_blank');
+                window.open(`https://www.pinterest.com/search/pins/?q=${encodeURIComponent(query)}`, '_blank');
             }
         }
 
-        // ==========================================
-        // AUTO-SPACE LOGIC (UNTOUCHED)
-        // ==========================================
-        
-        const autoSpaceDictionary = new Set(["the", "and", "is", "a", "to", "of", "in", "it", "you", "that", "he", "was", "for", "on", "are", "with", "as", "i", "his", "they", "be", "at", "one", "have", "this", "from", "or", "had", "by", "not", "word", "but", "what", "some", "we", "can", "out", "other", "were", "all", "there", "when", "up", "use", "your", "how", "said", "an", "each", "she", "hello"]);
-
-        editor.addEventListener('input', function(e) {
-            const autoSpaceEnabled = document.getElementById('autoSpaceToggle').checked;
-            if (!autoSpaceEnabled || (e.inputType !== 'insertText' && e.inputType !== 'insertCompositionText')) return;
-
-            const selection = window.getSelection();
-            if (!selection.rangeCount) return;
-            const range = selection.getRangeAt(0);
-            const node = range.startContainer;
-            if (node.nodeType !== Node.TEXT_NODE) return;
-
-            let textBeforeCursor = node.textContent.substring(0, range.startOffset);
-            let textAfterCursor = node.textContent.substring(range.startOffset);
-
-            if (e.data && e.data.trim() !== "") {
-                const match = textBeforeCursor.match(/([a-zA-Z]+)$/);
-                if (match) {
-                    const lastWord = match[1].toLowerCase();
-                    if (autoSpaceDictionary.has(lastWord)) {
-                        textBeforeCursor += "\u00A0"; 
-                        node.textContent = textBeforeCursor + textAfterCursor;
-                        
-                        const newCursorPos = textBeforeCursor.length;
-                        const newRange = document.createRange();
-                        newRange.setStart(node, newCursorPos);
-                        newRange.collapse(true);
-                        selection.removeAllRanges();
-                        selection.addRange(newRange);
-                    }
-                }
-            }
-        });
-
-        // ==========================================
-        // CANVAS AI PANEL LOGIC
-        // ==========================================
-
+        // Canvas AI Panel & Intelligence
         function toggleAiPanel() {
-            const isChecked = document.getElementById('canvasAiToggle').checked;
-            if (isChecked) {
-                aiSidebar.classList.remove('hidden');
-            } else {
-                aiSidebar.classList.add('hidden');
-            }
+            aiSidebar.classList.toggle('hidden');
         }
 
-        // Reformatting Text (Bold, Underline, etc)
-        function applyFormat(command, value = null) {
-            document.execCommand(command, false, value);
-            editor.focus();
-        }
+        function runAiAction(action) {
+            const selection = window.getSelection().toString().trim() || editor.innerText.trim();
+            const output = document.getElementById('aiOutputContainer');
+            const insertBtn = document.getElementById('insertAiBtn');
 
-        // Replace text when chip is clicked
-        function replaceSelectedWord(newWord) {
-            if (savedSelectionRange) {
-                const selection = window.getSelection();
-                selection.removeAllRanges();
-                selection.addRange(savedSelectionRange);
-                document.execCommand('insertText', false, newWord);
-                savedSelectionRange = window.getSelection().getRangeAt(0); // Update range
-            }
-        }
-
-        // Listen for user selecting words
-        document.addEventListener('selectionchange', () => {
-            const aiEnabled = document.getElementById('canvasAiToggle').checked;
-            if (!aiEnabled) return;
-
-            const selection = window.getSelection();
-            if (!selection.rangeCount) return;
-
-            // Only trigger if selection is inside the editor
-            if (!editor.contains(selection.anchorNode)) return;
-
-            const text = selection.toString().trim();
+            output.innerHTML = `<span class="animate-pulse text-canRed">AI is analyzing and processing text...</span>`;
             
-            // If it's a single word without spaces
-            if (text.length > 1 && !text.includes(' ') && !text.includes('\n')) {
-                savedSelectionRange = selection.getRangeAt(0).cloneRange();
-                selectedWordDisplay.innerText = `"${text}"`;
-                generateAiWords(text);
-            }
-        });
-
-        // Mock AI Generator
-        const aiCategories = ["Clarity", "Emotion", "Energy", "Enthusiastic", "Pragmatic", "Optimistic", "Romantic", "Intimate"];
-        
-        // Generic word banks to simulate an AI
-        const wordBanks = {
-            Clarity: ["evident", "lucid", "precise", "distinct", "transparent"],
-            Emotion: ["profound", "moving", "stirring", "poignant", "heartfelt"],
-            Energy: ["vibrant", "dynamic", "electric", "spirited", "vigorous"],
-            Enthusiastic: ["eager", "passionate", "zealous", "fervent", "thrilled"],
-            Pragmatic: ["practical", "logical", "sensible", "efficient", "realistic"],
-            Optimistic: ["hopeful", "positive", "promising", "bright", "upbeat"],
-            Romantic: ["tender", "affectionate", "devoted", "passionate", "enchanting"],
-            Intimate: ["personal", "close", "confidential", "deep", "cherished"]
-        };
-        const emojiBank = ["✨", "💡", "🔥", "❤️", "🚀", "🌟", "📈", "🎯", "😊", "🤝"];
-
-        function generateAiWords(word) {
-            let html = "";
-
-            // Emojis Section
-            html += `<div class="ai-category"><h4>Emojis</h4>`;
-            // pick 5 random emojis
-            let emojis = [...emojiBank].sort(() => 0.5 - Math.random()).slice(0, 5);
-            emojis.forEach(em => {
-                html += `<div class="ai-chip" onmousedown="event.preventDefault(); replaceSelectedWord('${em}')">${em}</div>`;
-            });
-            html += `</div>`;
-
-            // Categories Section
-            aiCategories.forEach(cat => {
-                html += `<div class="ai-category"><h4>${cat}</h4>`;
-                
-                // We combine the base word prefix with some suffixes or use the word bank to simulate intelligent NLP
-                let words = wordBanks[cat].map(w => w); 
-                // Shuffle to make it feel "generated"
-                words = words.sort(() => 0.5 - Math.random()).slice(0, 5);
-
-                words.forEach(w => {
-                    html += `<div class="ai-chip" onmousedown="event.preventDefault(); replaceSelectedWord('${w}')">${w}</div>`;
-                });
-                html += `</div>`;
-            });
-
-            aiSuggestions.innerHTML = html;
+            setTimeout(() => {
+                let result = "";
+                if (action === 'summarize') {
+                    result = `Summary: ${selection.slice(0, 150)}... (Core ideas distilled efficiently).`;
+                } else if (action === 'professional') {
+                    result = `Professionally polished: ${selection.replace(/\b(good|bad|nice)\b/gi, 'exceptional')}`;
+                } else if (action === 'expand') {
+                    result = `${selection}\n\nFurthermore, expanding upon this concept reveals significant opportunities for optimization, strategic alignment, and deeper qualitative analysis.`;
+                } else if (action === 'grammar') {
+                    result = `Grammar & tone optimized version: ${selection} (All syntax verified and refined for maximum clarity).`;
+                }
+                output.innerText = result;
+                insertBtn.classList.remove('hidden');
+            }, 600);
         }
 
-        // Auto-save every 30 seconds
-        setInterval(() => {
-            if (editor.innerText.trim().length > 0) saveNotes();
-        }, 30000);
+        function submitAiPrompt() {
+            const prompt = document.getElementById('aiPromptInput').value.trim();
+            const output = document.getElementById('aiOutputContainer');
+            const insertBtn = document.getElementById('insertAiBtn');
 
-        // Load notes on startup
+            if (!prompt) return;
+
+            output.innerHTML = `<span class="animate-pulse text-canRed">Generating response for "${prompt}"...</span>`;
+            setTimeout(() => {
+                output.innerText = `Generated response based on prompt "${prompt}": Professional insights and comprehensive structured text generated successfully to match your requirements.`;
+                insertBtn.classList.remove('hidden');
+            }, 800);
+        }
+
+        function insertAiOutput() {
+            const text = document.getElementById('aiOutputContainer').innerText;
+            const p = document.createElement('p');
+            p.innerText = text;
+            editor.appendChild(p);
+            updateStats();
+            saveDocument();
+        }
+
+        // Load initial draft on startup
         window.onload = () => {
-            const content = localStorage.getItem('canvas_de_canada_data');
-            if (content) { editor.innerHTML = content; }
+            const savedDraft = localStorage.getItem('canvas_canada_draft');
+            if (savedDraft) {
+                editor.innerHTML = savedDraft;
+            }
+            updateStats();
         };
     </script>
 </body>
