@@ -1,474 +1,237 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canvas de Canada — 2027 Workspace</title>
-    <!-- Tailwind CSS -->
+    <title>Canvas de Canada // Archival Exhibition & Notice</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        canRed: '#D52B1E',
-                        canRedDark: '#b02318',
+                        canvas: {
+                            bg: '#050608',
+                            surface: '#0d1017',
+                            card: '#131822',
+                            border: '#212938',
+                            gold: '#c5a059',
+                            accent: '#9e2a2b',
+                            muted: '#7a8599'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Cinzel', 'serif'],
+                        editorial: ['Newsreader', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace']
                     }
                 }
             }
         }
     </script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .mono { font-family: 'JetBrains Mono', monospace; }
-        
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-        .dark ::-webkit-scrollbar-thumb { background: #334155; }
-
-        /* Paper Editor Shadow */
-        .paper-shadow {
-            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
+        body {
+            background-color: #050608;
+            background-image: radial-gradient(circle at 50% 0%, rgba(197, 160, 89, 0.04) 0%, transparent 60%),
+                              linear-gradient(rgba(33, 41, 56, 0.15) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px;
+            color: #e2e8f0;
         }
-        .dark .paper-shadow {
-            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.08);
+
+        .glass-panel {
+            background: rgba(13, 16, 23, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(197, 160, 89, 0.15);
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #f3e5ab 0%, #c5a059 50%, #8a6f30 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050608; }
+        ::-webkit-scrollbar-thumb { background: #212938; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #c5a059; }
+
+        @keyframes subtlePulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+
+        .pulse-node {
+            animation: subtlePulse 4s infinite ease-in-out;
         }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 h-screen flex overflow-hidden transition-colors duration-200">
+<body class="min-h-screen flex flex-col justify-between selection:bg-canvas-gold selection:text-black">
 
-    <!-- LEFT SIDEBAR: Navigation, Vault & Presets -->
-    <aside class="w-80 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col z-20 shadow-sm">
-        <!-- Brand Header -->
-        <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+    <!-- Top Archival Navigation Header -->
+    <header class="border-b border-canvas-border bg-canvas-bg/90 backdrop-blur-md sticky top-0 z-40 px-6 py-5">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-canRed/10 text-canRed flex items-center justify-center font-bold text-lg">🍁</div>
+                <div class="w-10 h-10 rounded-lg bg-canvas-card border border-canvas-gold/40 flex items-center justify-center text-canvas-gold shadow-lg">
+                    <i class="fa-solid fa-feather-pointed text-sm"></i>
+                </div>
                 <div>
-                    <h1 class="font-bold text-lg tracking-tight leading-none">Canvas</h1>
-                    <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">de Canada · 2027 Suite</span>
+                    <h1 class="font-serif text-lg tracking-widest text-white">CANVAS DE CANADA</h1>
+                    <p class="font-mono text-[10px] text-canvas-muted uppercase tracking-wider">ARCHIVAL EXHIBITION & STATUS NOTICE</p>
                 </div>
             </div>
-            <button onclick="toggleTheme()" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition" title="Toggle Theme">
-                <i data-lucide="sun" class="w-4 h-4 dark:hidden"></i>
-                <i data-lucide="moon" class="w-4 h-4 hidden dark:block"></i>
-            </button>
+            <div class="flex items-center gap-2 text-xs font-mono text-canvas-gold bg-canvas-card px-3 py-1.5 rounded-lg border border-canvas-border">
+                <span class="w-2 h-2 rounded-full bg-canvas-gold animate-ping"></span>
+                <span>SYSTEM STATUS: REBUILDING</span>
+            </div>
         </div>
+    </header>
 
-        <!-- Sidebar Content -->
-        <div class="flex-1 overflow-y-auto p-4 space-y-6">
-            
-            <!-- Storage & Vault Manager -->
-            <div>
-                <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3 px-1">Storage & Vault</h2>
-                <div class="space-y-2">
-                    <button onclick="saveDocument()" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-canRed text-white font-medium text-sm hover:bg-canRedDark transition shadow-sm">
-                        <span class="flex items-center gap-2"><i data-lucide="save" class="w-4 h-4"></i> Save Draft</span>
-                        <span class="text-xs bg-black/10 px-2 py-0.5 rounded mono">Ctrl+S</span>
-                    </button>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="exportFile('html')" class="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition">
-                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Export HTML
-                        </button>
-                        <button onclick="exportFile('md')" class="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition">
-                            <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Export MD
-                        </button>
-                    </div>
-                    <label class="flex items-center justify-center gap-2 w-full px-3 py-2 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition">
-                        <i data-lucide="upload" class="w-3.5 h-3.5"></i> Import Document
-                        <input type="file" id="importFile" accept=".html,.md,.txt" class="hidden" onchange="importDocument(event)">
-                    </label>
-                </div>
-            </div>
-
-            <!-- Expanded Templates & Presets -->
-            <div>
-                <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3 px-1">Templates & Presets</h2>
-                <div class="grid grid-cols-1 gap-1.5">
-                    <button onclick="loadTemplate('business')" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-left">
-                        <i data-lucide="briefcase" class="w-4 h-4 text-canRed"></i> Canadian Business Letter
-                    </button>
-                    <button onclick="loadTemplate('proposal')" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-left">
-                        <i data-lucide="layout-template" class="w-4 h-4 text-canRed"></i> Project Proposal
-                    </button>
-                    <button onclick="loadTemplate('meeting')" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-left">
-                        <i data-lucide="calendar" class="w-4 h-4 text-canRed"></i> Meeting Agenda & Notes
-                    </button>
-                    <button onclick="loadTemplate('journal')" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-left">
-                        <i data-lucide="book-open" class="w-4 h-4 text-canRed"></i> Daily Journal / Log
-                    </button>
-                    <button onclick="loadTemplate('grocery')" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-left">
-                        <i data-lucide="shopping-cart" class="w-4 h-4 text-canRed"></i> Grocery List
-                    </button>
-                    <button onclick="loadTemplate('recipe')" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-left">
-                        <i data-lucide="utensils" class="w-4 h-4 text-canRed"></i> Recipe & Ingredients
-                    </button>
-                </div>
-            </div>
-
-            <!-- Quick Research Tool -->
-            <div>
-                <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3 px-1">Quick Search</h2>
-                <div class="space-y-2">
-                    <input type="text" id="quickSearchInput" placeholder="Search recipe or topic..." class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:border-canRed">
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="performSearch('google')" class="px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-center gap-1">
-                            <i data-lucide="search" class="w-3 h-3"></i> Google
-                        </button>
-                        <button onclick="performSearch('pinterest')" class="px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-medium hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-center gap-1">
-                            <i data-lucide="pin" class="w-3 h-3"></i> Pinterest
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Sidebar Footer Status -->
-        <div class="p-4 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 flex items-center justify-between">
-            <span id="autoSaveStatus" class="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-medium">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Saved locally
-            </span>
-            <span class="mono text-[10px]" id="wordCountBadge">0 words</span>
-        </div>
-    </aside>
-
-    <!-- MAIN WORKSPACE -->
-    <main class="flex-1 flex flex-col h-screen overflow-hidden">
+    <!-- Main Content Container -->
+    <main class="max-w-5xl mx-auto px-6 py-16 flex-1 w-full space-y-20">
         
-        <!-- Top Formatting & AI Toggle Toolbar -->
-        <header class="h-14 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between z-10">
-            <!-- Formatting Tools -->
-            <div class="flex items-center gap-1 overflow-x-auto py-1">
-                <button onclick="formatDoc('bold')" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300" title="Bold"><i data-lucide="bold" class="w-4 h-4"></i></button>
-                <button onclick="formatDoc('italic')" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300" title="Italic"><i data-lucide="italic" class="w-4 h-4"></i></button>
-                <button onclick="formatDoc('underline')" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300" title="Underline"><i data-lucide="underline" class="w-4 h-4"></i></button>
-                <div class="w-px h-5 bg-slate-200 dark:bg-slate-700 mx-1"></div>
-                <button onclick="formatDoc('formatBlock', '<h1>')" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold text-xs" title="Heading 1">H1</button>
-                <button onclick="formatDoc('formatBlock', '<h2>')" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold text-xs" title="Heading 2">H2</button>
-                <button onclick="formatDoc('formatBlock', '<p>')" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium text-xs" title="Paragraph">P</button>
-                <div class="w-px h-5 bg-slate-200 dark:bg-slate-700 mx-1"></div>
-                <button onclick="formatDoc('insertUnorderedList')" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300" title="Bullet List"><i data-lucide="list" class="w-4 h-4"></i></button>
-                <button onclick="formatDoc('insertOrderedList')" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300" title="Numbered List"><i data-lucide="list-ordered" class="w-4 h-4"></i></button>
+        <!-- Discontinuation Formal Notice Statement -->
+        <section class="glass-panel rounded-2xl p-8 sm:p-14 relative overflow-hidden shadow-2xl border-canvas-gold/30">
+            <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-canvas-gold/5 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="max-w-3xl mx-auto space-y-8 relative z-10">
+                <div class="flex items-center gap-3 text-canvas-gold font-mono text-xs uppercase tracking-widest">
+                    <i class="fa-solid fa-scroll"></i>
+                    <span>Official Dispatch • 2026</span>
+                </div>
+
+                <h2 class="font-serif text-2xl sm:text-4xl text-white font-medium leading-snug">
+                    "This project has been formally discontinued for the time being."
+                </h2>
+
+                <div class="font-editorial text-lg sm:text-xl text-slate-300 space-y-6 leading-relaxed border-l-2 border-canvas-gold/50 pl-6 my-6">
+                    <p>
+                        My goal is to build things that are fundamentally important in solving daily annoyances for myself. That means if something doesn't reach the need I require, I must forgo and rebuild.
+                    </p>
+                    <p>
+                        So it's a discontinuation of temporary standards. Not a formal dissolution.
+                    </p>
+                </div>
+
+                <div class="pt-4 flex items-center justify-end gap-3 text-right">
+                    <div class="font-serif text-sm text-canvas-gold tracking-wide italic">
+                        (signed Alex Breault)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architectural Feature Showcase (Code-Generated Interactive Canvases) -->
+        <section class="space-y-10">
+            <div class="text-center space-y-2">
+                <h3 class="font-serif text-xl tracking-wider text-white">ARCHITECTURAL FEATURE EXHIBITION</h3>
+                <p class="font-mono text-xs text-canvas-muted">CODE-RENDERED SCHEMATICS OF PREVIOUS CORE MODULES</p>
             </div>
 
-            <!-- Right Toolbar Controls -->
-            <div class="flex items-center gap-3">
-                <button onclick="toggleAiPanel()" id="aiToggleBtn" class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-canRed/10 text-canRed dark:bg-canRed/20 font-semibold text-xs hover:bg-canRed/20 transition">
-                    <i data-lucide="sparkles" class="w-4 h-4"></i> Canvas AI Assistant
-                </button>
-            </div>
-        </header>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Feature 1: Global Press Directory -->
+                <div class="glass-panel rounded-2xl p-6 flex flex-col justify-between space-y-6 hover:border-canvas-gold/40 transition-all group">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="font-mono text-[10px] text-canvas-gold px-2.5 py-1 rounded bg-canvas-card border border-canvas-border uppercase">Module 01</span>
+                            <i class="fa-solid fa-network-wired text-canvas-muted group-hover:text-canvas-gold transition-colors"></i>
+                        </div>
+                        <h4 class="font-serif text-base text-white">Global Press Matrix</h4>
+                        <p class="font-editorial text-xs text-slate-400 leading-relaxed">
+                            Structured node indexing for bilingual Canadian and international press outlets grouped by geographic vectors.
+                        </p>
+                    </div>
 
-        <!-- Editor Canvas View -->
-        <div class="flex-1 overflow-y-auto p-8 flex justify-center bg-slate-100 dark:bg-slate-950">
-            <div class="w-full max-w-4xl min-h-[85vh] bg-white dark:bg-slate-900 paper-shadow rounded-2xl p-12 focus:outline-none transition-colors"
-                 id="editor" contenteditable="true" spellcheck="true">
-                <h1>Untitled Document</h1>
-                <p>Welcome to the overhauled Canvas de Canada 2027 workspace. Start typing your notes, highlight any text to consult Canvas AI, or select a template from the sidebar.</p>
+                    <!-- Code-Generated Interactive SVG Graphic Canvas -->
+                    <div class="bg-canvas-bg rounded-xl p-4 border border-canvas-border relative overflow-hidden h-36 flex items-center justify-center">
+                        <div class="absolute inset-0 bg-[radial-gradient(#c5a059_1px,transparent_1px)] [background-size:16px_16px] opacity-10"></div>
+                        <svg class="w-full h-full" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 50 H180" stroke="#212938" stroke-width="1.5" stroke-dasharray="4 4"/>
+                            <circle cx="50" cy="50" r="16" fill="#131822" stroke="#c5a059" stroke-width="1.5" class="pulse-node"/>
+                            <circle cx="100" cy="30" r="12" fill="#131822" stroke="#7a8599" stroke-width="1"/>
+                            <circle cx="150" cy="70" r="14" fill="#131822" stroke="#7a8599" stroke-width="1"/>
+                            <text x="50" y="53" fill="#c5a059" font-family="JetBrains Mono" font-size="8" text-anchor="middle">CA</text>
+                            <text x="100" y="33" fill="#e2e8f0" font-family="JetBrains Mono" font-size="7" text-anchor="middle">US</text>
+                            <text x="150" y="73" fill="#e2e8f0" font-family="JetBrains Mono" font-size="7" text-anchor="middle">EU</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Feature 2: World Direct Hub -->
+                <div class="glass-panel rounded-2xl p-6 flex flex-col justify-between space-y-6 hover:border-canvas-gold/40 transition-all group">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="font-mono text-[10px] text-canvas-gold px-2.5 py-1 rounded bg-canvas-card border border-canvas-border uppercase">Module 02</span>
+                            <i class="fa-solid fa-satellite text-canvas-muted group-hover:text-canvas-gold transition-colors"></i>
+                        </div>
+                        <h4 class="font-serif text-base text-white">World Direct Execution Hub</h4>
+                        <p class="font-editorial text-xs text-slate-400 leading-relaxed">
+                            Secure iframe proxy and reader extractor engine designed to bypass restrictive embedding policies.
+                        </p>
+                    </div>
+
+                    <!-- Code-Generated Interactive SVG Graphic Canvas -->
+                    <div class="bg-canvas-bg rounded-xl p-4 border border-canvas-border relative overflow-hidden h-36 flex items-center justify-center">
+                        <div class="absolute inset-0 bg-[radial-gradient(#c5a059_1px,transparent_1px)] [background-size:16px_16px] opacity-10"></div>
+                        <svg class="w-full h-full" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="25" y="20" width="150" height="60" rx="6" fill="#131822" stroke="#212938" stroke-width="1.5"/>
+                            <rect x="35" y="32" width="130" height="6" rx="2" fill="#212938"/>
+                            <rect x="35" y="46" width="90" height="6" rx="2" fill="#c5a059" opacity="0.6"/>
+                            <circle cx="155" cy="49" r="4" fill="#c5a059"/>
+                            <path d="M70 70 H130" stroke="#7a8599" stroke-width="1" stroke-dasharray="2 2"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Feature 3: Translation Agent -->
+                <div class="glass-panel rounded-2xl p-6 flex flex-col justify-between space-y-6 hover:border-canvas-gold/40 transition-all group">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="font-mono text-[10px] text-canvas-gold px-2.5 py-1 rounded bg-canvas-card border border-canvas-border uppercase">Module 03</span>
+                            <i class="fa-solid fa-language text-canvas-muted group-hover:text-canvas-gold transition-colors"></i>
+                        </div>
+                        <h4 class="font-serif text-base text-white">Archives Translation Agent</h4>
+                        <p class="font-editorial text-xs text-slate-400 leading-relaxed">
+                            Live on-screen visual scanner featuring laser inspection, dual-pane output, and speech synthesis.
+                        </p>
+                    </div>
+
+                    <!-- Code-Generated Interactive SVG Graphic Canvas -->
+                    <div class="bg-canvas-bg rounded-xl p-4 border border-canvas-border relative overflow-hidden h-36 flex items-center justify-center">
+                        <div class="absolute inset-0 bg-[radial-gradient(#c5a059_1px,transparent_1px)] [background-size:16px_16px] opacity-10"></div>
+                        <svg class="w-full h-full" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="30" y="25" width="65" height="50" rx="4" fill="#131822" stroke="#212938" stroke-width="1"/>
+                            <rect x="105" y="25" width="65" height="50" rx="4" fill="#131822" stroke="#9e2a2b" stroke-width="1"/>
+                            <line x1="97" y1="50" x2="103" y2="50" stroke="#c5a059" stroke-width="2"/>
+                            <path d="M40 40 H80 M40 55 H70" stroke="#7a8599" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M115 40 H155 M115 55 H140" stroke="#c5a059" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+                        </svg>
+                    </div>
+                </div>
+
             </div>
-        </div>
+        </section>
+
     </main>
 
-    <!-- RIGHT SIDEBAR: Live Canvas AI Assistant -->
-    <aside id="aiSidebar" class="w-96 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col z-20 shadow-lg transition-all duration-300">
-        <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-            <div class="flex items-center gap-2 text-canRed font-bold">
-                <i data-lucide="sparkles" class="w-5 h-5"></i> Canvas AI Copilot
-            </div>
-            <button onclick="toggleAiPanel()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                <i data-lucide="x" class="w-4 h-4"></i>
-            </button>
+    <!-- Archival Footer -->
+    <footer class="border-t border-canvas-border bg-canvas-bg py-8 px-6 text-center font-mono text-xs text-canvas-muted">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>CANVAS DE CANADA // ARCHIVAL EXHIBITION</div>
+            <div>BUILDING FOUNDATIONAL UTILITIES FOR PERSONAL STANDARDS</div>
         </div>
+    </footer>
 
-        <div class="flex-1 overflow-y-auto p-4 space-y-4 text-sm">
-            <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300">
-                Highlight text in your document or use quick prompts below to rewrite, summarize, calculate, or enhance your writing instantly.
-            </div>
-
-            <!-- Quick Action Chips -->
-            <div>
-                <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-2">Quick Actions</span>
-                <div class="flex flex-wrap gap-1.5">
-                    <button onclick="runAiAction('summarize')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs font-medium hover:bg-canRed hover:text-white transition">✨ Summarize selection</button>
-                    <button onclick="runAiAction('professional')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs font-medium hover:bg-canRed hover:text-white transition">💼 Professional polish</button>
-                    <button onclick="runAiAction('calculate')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs font-medium hover:bg-canRed hover:text-white transition">📊 Calculate & analyze</button>
-                    <button onclick="runAiAction('expand')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs font-medium hover:bg-canRed hover:text-white transition">📈 Expand thoughts</button>
-                    <button onclick="runAiAction('grammar')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs font-medium hover:bg-canRed hover:text-white transition">🔍 Fix grammar & tone</button>
-                    <button onclick="runAiAction('bullets')" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs font-medium hover:bg-canRed hover:text-white transition">📋 Convert to bullets</button>
-                </div>
-            </div>
-
-            <!-- AI Chat & Prompt Box -->
-            <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-                <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 block">Custom AI Prompt</label>
-                <textarea id="aiPromptInput" rows="3" placeholder="Ask AI to calculate totals, write a summary, or draft..." class="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs focus:outline-none focus:border-canRed resize-none"></textarea>
-                <button onclick="submitAiPrompt()" class="w-full py-2 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-semibold text-xs hover:opacity-90 transition flex items-center justify-center gap-1.5">
-                    <i data-lucide="send" class="w-3.5 h-3.5"></i> Generate Response
-                </button>
-            </div>
-
-            <!-- AI Output Result Box -->
-            <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-                <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 block">AI Output</span>
-                <div id="aiOutputContainer" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 text-xs min-h-[100px] max-h-[220px] overflow-y-auto text-slate-700 dark:text-slate-300 whitespace-pre-line">
-                    AI responses and calculated outputs will appear here...
-                </div>
-                <button onclick="insertAiOutput()" id="insertAiBtn" class="w-full py-2 rounded-xl bg-canRed text-white font-semibold text-xs hover:bg-canRedDark transition hidden flex items-center justify-center gap-1.5">
-                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Insert into Document
-                </button>
-            </div>
-        </div>
-    </aside>
-
-    <!-- Application Script Logic -->
-    <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
-
-        const editor = document.getElementById('editor');
-        const wordCountBadge = document.getElementById('wordCountBadge');
-        const autoSaveStatus = document.getElementById('autoSaveStatus');
-        const aiSidebar = document.getElementById('aiSidebar');
-
-        // Theme Toggle
-        function toggleTheme() {
-            const html = document.documentElement;
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-            } else {
-                html.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-            }
-        }
-
-        // Load saved theme on startup (Bug Fixed: Parenthesis syntax error resolved)
-        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        }
-
-        // Rich Text Formatting Helper
-        function formatDoc(command, value = null) {
-            document.execCommand(command, false, value);
-            editor.focus();
-            updateStats();
-        }
-
-        // Word Count & Stats Update
-        function updateStats() {
-            const text = editor.innerText || "";
-            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-            wordCountBadge.innerText = `${words} words`;
-        }
-
-        editor.addEventListener('input', () => {
-            updateStats();
-            triggerAutoSave();
-        });
-
-        // Local Storage & Vault
-        let saveTimeout;
-        function triggerAutoSave() {
-            autoSaveStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span> Saving...`;
-            clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(() => {
-                localStorage.setItem('canvas_canada_draft', editor.innerHTML);
-                autoSaveStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Saved locally`;
-            }, 1000);
-        }
-
-        function saveDocument() {
-            localStorage.setItem('canvas_canada_draft', editor.innerHTML);
-            autoSaveStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Saved manually`;
-            setTimeout(() => {
-                autoSaveStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Saved locally`;
-            }, 2000);
-        }
-
-        function exportFile(type) {
-            const content = type === 'html' ? editor.innerHTML : editor.innerText;
-            const mime = type === 'html' ? 'text/html' : 'text/markdown';
-            const blob = new Blob([content], { type: mime });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `Canvas_Document_${Date.now()}.${type === 'html' ? 'html' : 'md'}`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        function importDocument(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                editor.innerHTML = e.target.result;
-                updateStats();
-                saveDocument();
-            };
-            reader.readAsText(file);
-        }
-
-        // Expanded Presets & Templates
-        function loadTemplate(type) {
-            let html = "";
-            switch(type) {
-                case 'business':
-                    html = `<h1>Canadian Business Letter</h1><p><b>Date:</b> ${new Date().toLocaleDateString()}</p><p><b>To:</b> Recipient Name<br><b>Company:</b> Corporation Name<br><b>Location:</b> Toronto, ON</p><p>Dear [Recipient Name],</p><p>Please accept this correspondence regarding...</p><p>Sincerely,<br>[Your Name]</p>`;
-                    break;
-                case 'proposal':
-                    html = `<h1>Project Proposal</h1><h2>1. Executive Summary</h2><p>Brief overview of the proposed project scope and objectives.</p><h2>2. Objectives & Deliverables</h2><ul><li>Deliverable 1</li><li>Deliverable 2</li></ul><h2>3. Timeline & Budget</h2><p>Estimated milestones and resource allocation.</p>`;
-                    break;
-                case 'meeting':
-                    html = `<h1>Meeting Agenda & Notes</h1><p><b>Date:</b> ${new Date().toLocaleDateString()}</p><ul><li><b>Attendees:</b> </li><li><b>Objective:</b> </li></ul><h2>Discussion Points</h2><ul><li>Point 1</li></ul><h2>Action Items</h2><ul><li>[ ] Task 1 — Assigned to @name</li></ul>`;
-                    break;
-                case 'journal':
-                    html = `<h1>Daily Journal</h1><p><b>Date:</b> ${new Date().toLocaleDateString()}</p><h2>Today's Focus</h2><p>Primary goals and mindset...</p><h2>Reflections</h2><p>Notes on progress and learnings...</p>`;
-                    break;
-                case 'grocery':
-                    html = `<h1>Grocery List</h1><ul><li><b>Produce:</b> Apples, Potatoes, Maple Syrup</li><li><b>Dairy:</b> Milk, Cheddar Cheese, Butter</li><li><b>Bakery:</b> Sourdough Bread</li></ul>`;
-                    break;
-                case 'recipe':
-                    html = `<h1>Classic Poutine Recipe</h1><h2>Ingredients</h2><ul><li>1 kg Russet potatoes</li><li>Cheese curds (fresh)</li><li>Beef or vegetable gravy</li></ul><h2>Instructions</h2><ol><li>Cut and fry potatoes until golden brown.</li><li>Top with fresh cheese curds.</li><li>Pour hot gravy over top and serve immediately.</li></ol>`;
-                    break;
-            }
-            editor.innerHTML = html;
-            updateStats();
-            saveDocument();
-        }
-
-        // Quick Search handler
-        function performSearch(engine) {
-            const query = document.getElementById('quickSearchInput').value;
-            if (!query) { alert('Please enter a search term.'); return; }
-            if (engine === 'google') {
-                window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
-            } else if (engine === 'pinterest') {
-                window.open(`https://www.pinterest.com/search/pins/?q=${encodeURIComponent(query)}`, '_blank');
-            }
-        }
-
-        // ==========================================
-        // ADVANCED CANVAS AI COPILOT REASONING ENGINE
-        // ==========================================
-        class CanvasAIEngine {
-            static process(actionOrQuery, contextText) {
-                const text = contextText || editor.innerText.trim() || "";
-                const query = actionOrQuery.toLowerCase().trim();
-
-                // 1. Calculations & Financial Analysis (Robust check to prevent false positives)
-                if (query === 'calculate' || query.includes('calc') || query.includes('math') || query.includes('sum') || query.includes('tax') || /\d+[\+\-\*\/]\d+/.test(query) || query.includes('$')) {
-                    try {
-                        const numbers = text.match(/-?\d+(\.\d+)?/g) || query.match(/-?\d+(\.\d+)?/g);
-                        if (numbers && numbers.length >= 1) {
-                            const nums = numbers.map(Number);
-                            const sum = nums.reduce((a, b) => a + b, 0);
-                            const avg = sum / nums.length;
-                            const hst13 = sum * 0.13;
-                            return `📊 **Financial & Mathematical Analysis**:\n• Extracted Values: ${nums.join(', ')}\n• Sum Total: $${sum.toFixed(2)}\n• Mathematical Average: $${avg.toFixed(2)}\n• Ontario 13% HST Tax: $${hst13.toFixed(2)}\n• Gross Total (Subtotal + HST): $${(sum + hst13).toFixed(2)}`;
-                        }
-                    } catch(e) {}
-                }
-
-                // 2. Summarization
-                if (query === 'summarize' || query.includes('summary')) {
-                    const sentences = text.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0);
-                    const summary = sentences.slice(0, 3).join(' ');
-                    const wordCount = text.split(/\s+/).length;
-                    return `📌 **Executive Summary**:\n"${summary || text.slice(0, 250)}..."\n\n*Metrics*: Processed ${wordCount} words into key conceptual takeaways.`;
-                }
-
-                // 3. Professional Polish
-                if (query === 'professional' || query.includes('formal') || query.includes('business')) {
-                    return `💼 **Professional Editorial Polish**:\n\n"In accordance with established standards and strategic directives, the primary objectives have been thoroughly articulated to ensure operational excellence, compliance, and verified quality across all deliverables."`;
-                }
-
-                // 4. Expand Thoughts
-                if (query === 'expand' || query.includes('elaborate')) {
-                    return `📈 **Strategic Content Expansion**:\n\n${text}\n\nFurthermore, rigorous implementation requires careful evaluation of macroeconomic factors, stakeholder alignment, resource optimization, and structured milestone tracking to ensure sustainable, long-term success.`;
-                }
-
-                // 5. Grammar & Tone
-                if (query === 'grammar' || query.includes('fix')) {
-                    return `🔍 **Grammar & Syntax Verification**:\n\nAll syntactic structures, punctuation marks, and tone consistencies have been verified and optimized for professional clarity. Syntax is fully compliant.`;
-                }
-
-                // 6. Bullet Points conversion
-                if (query === 'bullets' || query.includes('bullet') || query.includes('list')) {
-                    const lines = text.split('\n').filter(l => l.trim().length > 0);
-                    const bullets = lines.slice(0, 8).map(l => `• ${l.trim().replace(/^[•\-\*]\s*/, '')}`).join('\n');
-                    return `📋 **Structured Action Points**:\n${bullets || '• Primary objective cataloged and verified.\n• Strategic milestone aligned with timeline.\n• Execution pathway established.'}`;
-                }
-
-                // 7. General Custom Prompt Handling
-                return `🤖 **Canvas AI Copilot Synthesis**:\n\nBased on your prompt ("${actionOrQuery}"):\n\n1. **Context Evaluation**: The document content has been parsed successfully against professional editorial frameworks.\n2. **Insights**: Clear structural hierarchy and quantified milestones recommended.\n3. **Generated Response**: Successfully synthesized high-quality content optimized for your workspace requirements.`;
-            }
-        }
-
-        // Canvas AI Panel & Intelligence Triggers
-        function toggleAiPanel() {
-            aiSidebar.classList.toggle('hidden');
-        }
-
-        function runAiAction(action) {
-            const selection = window.getSelection().toString().trim() || editor.innerText.trim();
-            const output = document.getElementById('aiOutputContainer');
-            const insertBtn = document.getElementById('insertAiBtn');
-
-            output.innerHTML = `<span class="animate-pulse text-canRed">Canvas AI Copilot analyzing document...</span>`;
-            
-            setTimeout(() => {
-                const result = CanvasAIEngine.process(action, selection);
-                output.innerText = result;
-                insertBtn.classList.remove('hidden');
-            }, 450);
-        }
-
-        function submitAiPrompt() {
-            const prompt = document.getElementById('aiPromptInput').value.trim();
-            const output = document.getElementById('aiOutputContainer');
-            const insertBtn = document.getElementById('insertAiBtn');
-
-            if (!prompt) {
-                alert('Please enter a prompt for the AI Copilot.');
-                return;
-            }
-
-            output.innerHTML = `<span class="animate-pulse text-canRed">Executing AI reasoning for "${prompt}"...</span>`;
-            setTimeout(() => {
-                const result = CanvasAIEngine.process(prompt, editor.innerText.trim());
-                output.innerText = result;
-                insertBtn.classList.remove('hidden');
-            }, 600);
-        }
-
-        function insertAiOutput() {
-            const text = document.getElementById('aiOutputContainer').innerText;
-            const p = document.createElement('div');
-            p.innerHTML = `<br><p><b>[AI Copilot Output]</b><br>${text.replace(/\n/g, '<br>')}</p>`;
-            editor.appendChild(p);
-            updateStats();
-            saveDocument();
-            document.getElementById('aiOutputContainer').innerText = "AI responses and calculated outputs will appear here...";
-            document.getElementById('insertAiBtn').classList.add('hidden');
-            document.getElementById('aiPromptInput').value = '';
-        }
-
-        // Load initial draft on startup
-        window.onload = () => {
-            const savedDraft = localStorage.getItem('canvas_canada_draft');
-            if (savedDraft) {
-                editor.innerHTML = savedDraft;
-            }
-            updateStats();
-        };
-    </script>
 </body>
 </html>
