@@ -2,7 +2,7 @@
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Canvas de Canada — Archival Exhibition & Feature Showcase</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -46,10 +46,11 @@
                               linear-gradient(rgba(30, 37, 50, 0.12) 1px, transparent 1px);
             background-size: 100% 100%, 32px 32px;
             color: #e2e8f0;
+            overflow-x: hidden;
         }
 
         .glass-panel {
-            background: rgba(11, 14, 20, 0.8);
+            background: rgba(11, 14, 20, 0.85);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(197, 160, 89, 0.18);
         }
@@ -59,7 +60,7 @@
         }
 
         /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: #040507; }
         ::-webkit-scrollbar-thumb { background: #1e2532; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #c5a059; }
@@ -77,42 +78,42 @@
 <body class="min-h-screen flex flex-col justify-between selection:bg-canvas-gold selection:text-black">
 
     <!-- Top Archival Navigation Header -->
-    <header class="border-b border-canvas-border bg-canvas-bg/90 backdrop-blur-md sticky top-0 z-50 px-6 py-5">
-        <div class="max-w-6xl mx-auto flex items-center justify-between">
+    <header class="border-b border-canvas-border bg-canvas-bg/95 backdrop-blur-md sticky top-0 z-50 px-4 sm:px-6 py-4">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-canvas-card border border-canvas-gold/40 flex items-center justify-center text-canvas-gold shadow-lg">
-                    <span class="text-base font-bold">🍁</span>
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-canvas-card border border-canvas-gold/40 flex items-center justify-center text-canvas-gold shadow-lg flex-shrink-0">
+                    <span class="text-sm sm:text-base font-bold">🍁</span>
                 </div>
-                <div>
-                    <h1 class="font-serif text-lg tracking-widest text-white">CANVAS DE CANADA</h1>
-                    <p class="font-mono text-[10px] text-canvas-muted uppercase tracking-wider">ARCHIVAL SUITE & STATUS EXHIBITION</p>
+                <div class="min-w-0">
+                    <h1 class="font-serif text-sm sm:text-lg tracking-widest text-white truncate">CANVAS DE CANADA</h1>
+                    <p class="font-mono text-[9px] sm:text-[10px] text-canvas-muted uppercase tracking-wider truncate">ARCHIVAL SUITE & STATUS EXHIBITION</p>
                 </div>
             </div>
-            <div class="flex items-center gap-2 text-xs font-mono text-canvas-gold bg-canvas-card px-3.5 py-1.5 rounded-lg border border-canvas-border">
-                <span class="w-2 h-2 rounded-full bg-canvas-canRed animate-pulse"></span>
-                <span>STATUS: FORMALLY DISCONTINUED</span>
+            <div class="flex items-center gap-2 text-[10px] sm:text-xs font-mono text-canvas-gold bg-canvas-card px-3 py-1.5 rounded-lg border border-canvas-border">
+                <span class="w-2 h-2 rounded-full bg-canvas-canRed animate-pulse flex-shrink-0"></span>
+                <span class="truncate">STATUS: FORMALLY DISCONTINUED</span>
             </div>
         </div>
     </header>
 
     <!-- Main Content Container -->
-    <main class="max-w-5xl mx-auto px-6 py-16 flex-1 w-full space-y-20">
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 flex-1 w-full space-y-12 sm:space-y-16">
         
         <!-- Discontinuation Formal Notice Statement -->
-        <section class="glass-panel rounded-3xl p-8 sm:p-14 relative overflow-hidden gold-glow">
-            <div class="absolute -right-24 -bottom-24 w-96 h-96 bg-canvas-gold/5 rounded-full blur-3xl pointer-events-none"></div>
+        <section class="glass-panel rounded-2xl sm:rounded-3xl p-6 sm:p-12 lg:p-14 relative overflow-hidden gold-glow">
+            <div class="absolute -right-24 -bottom-24 w-72 sm:w-96 h-72 sm:h-96 bg-canvas-gold/5 rounded-full blur-3xl pointer-events-none"></div>
             
-            <div class="max-w-3xl mx-auto space-y-8 relative z-10">
-                <div class="flex items-center gap-2.5 text-canvas-gold font-mono text-xs uppercase tracking-widest">
+            <div class="max-w-3xl mx-auto space-y-6 sm:space-y-8 relative z-10">
+                <div class="flex items-center gap-2 text-canvas-gold font-mono text-[11px] sm:text-xs uppercase tracking-widest">
                     <i class="fa-solid fa-feather-pointed"></i>
                     <span>Official Statement • 2026</span>
                 </div>
 
-                <h2 class="font-serif text-xl sm:text-3xl text-white font-medium leading-relaxed tracking-wide">
+                <h2 class="font-serif text-lg sm:text-2xl lg:text-3xl text-white font-medium leading-relaxed tracking-wide">
                     "This project has been formally discontinued for the time being."
                 </h2>
 
-                <div class="font-editorial text-lg sm:text-xl text-slate-300 space-y-6 leading-relaxed border-l-2 border-canvas-gold/50 pl-6 my-6">
+                <div class="font-editorial text-base sm:text-lg lg:text-xl text-slate-300 space-y-4 sm:space-y-6 leading-relaxed border-l-2 border-canvas-gold/50 pl-4 sm:pl-6 my-4 sm:my-6">
                     <p>
                         My goal is to build things that are fundamentally important in solving daily annoyances for myself. That means if something doesn't reach the need I require, I must forgo and rebuild.
                     </p>
@@ -121,8 +122,8 @@
                     </p>
                 </div>
 
-                <div class="pt-4 flex items-center justify-end">
-                    <div class="font-serif text-sm text-canvas-gold tracking-wide italic">
+                <div class="pt-2 sm:pt-4 flex items-center justify-end">
+                    <div class="font-serif text-xs sm:text-sm text-canvas-gold tracking-wide italic">
                         (signed Alex Breault)
                     </div>
                 </div>
@@ -130,29 +131,29 @@
         </section>
 
         <!-- FEATURE SHOWCASE GALLERY -->
-        <section class="space-y-10">
-            <div class="text-center space-y-2">
-                <h3 class="font-serif text-2xl tracking-wider text-white">FEATURE EXHIBITION GALLERY</h3>
-                <p class="font-mono text-xs text-canvas-muted uppercase tracking-widest">VISUALIZING THE CORE MODULES OF CANVAS DE CANADA</p>
+        <section class="space-y-8 sm:space-y-10">
+            <div class="text-center space-y-2 px-2">
+                <h3 class="font-serif text-xl sm:text-2xl tracking-wider text-white">FEATURE EXHIBITION GALLERY</h3>
+                <p class="font-mono text-[11px] sm:text-xs text-canvas-muted uppercase tracking-widest">VISUALIZING THE CORE MODULES OF CANVAS DE CANADA</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                 
                 <!-- Feature 1: Canvas AI Copilot -->
-                <div class="glass-panel rounded-2xl p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:border-canvas-gold/40 transition-all group">
+                <div class="glass-panel rounded-2xl p-5 sm:p-8 flex flex-col justify-between space-y-6 hover:border-canvas-gold/40 transition-all group">
                     <div class="space-y-3">
                         <div class="flex items-center justify-between">
                             <span class="font-mono text-[10px] text-canvas-canRed bg-canvas-canRed/10 border border-canvas-canRed/30 px-2.5 py-1 rounded-md uppercase font-bold">Module 01</span>
                             <i class="fa-solid fa-sparkles text-canvas-canRed"></i>
                         </div>
-                        <h4 class="font-serif text-lg text-white">Canvas AI Copilot & Reasoning Engine</h4>
-                        <p class="font-editorial text-sm text-slate-400 leading-relaxed">
+                        <h4 class="font-serif text-base sm:text-lg text-white">Canvas AI Copilot & Reasoning Engine</h4>
+                        <p class="font-editorial text-xs sm:text-sm text-slate-400 leading-relaxed">
                             On-demand analysis suite offering financial calculations (including Ontario 13% HST breakdowns), executive summaries, grammar polishes, and structured bullet conversions.
                         </p>
                     </div>
 
                     <!-- Visual Code-Logic Preview Card -->
-                    <div class="bg-canvas-bg rounded-xl p-4 border border-canvas-border space-y-3 font-mono text-xs">
+                    <div class="bg-canvas-bg rounded-xl p-3.5 sm:p-4 border border-canvas-border space-y-3 font-mono text-[11px] sm:text-xs">
                         <div class="flex items-center justify-between text-slate-500 border-b border-canvas-border pb-2">
                             <span>AI Copilot Analysis</span>
                             <span class="text-canvas-canRed">Active</span>
@@ -167,83 +168,83 @@
                 </div>
 
                 <!-- Feature 2: Templates & Presets -->
-                <div class="glass-panel rounded-2xl p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:border-canvas-gold/40 transition-all group">
+                <div class="glass-panel rounded-2xl p-5 sm:p-8 flex flex-col justify-between space-y-6 hover:border-canvas-gold/40 transition-all group">
                     <div class="space-y-3">
                         <div class="flex items-center justify-between">
                             <span class="font-mono text-[10px] text-canvas-gold bg-canvas-gold/10 border border-canvas-gold/30 px-2.5 py-1 rounded-md uppercase font-bold">Module 02</span>
                             <i class="fa-solid fa-file-lines text-canvas-gold"></i>
                         </div>
-                        <h4 class="font-serif text-lg text-white">Templates & Presets Suite</h4>
-                        <p class="font-editorial text-sm text-slate-400 leading-relaxed">
+                        <h4 class="font-serif text-base sm:text-lg text-white">Templates & Presets Suite</h4>
+                        <p class="font-editorial text-xs sm:text-sm text-slate-400 leading-relaxed">
                             Pre-formatted professional document layouts including Canadian Business Letters, Project Proposals, Meeting Agendas, Daily Journals, and Classic Poutine Recipes.
                         </p>
                     </div>
 
                     <!-- Visual Code-Logic Preview Card -->
-                    <div class="bg-canvas-bg rounded-xl p-4 border border-canvas-border space-y-2 font-mono text-xs">
-                        <div class="grid grid-cols-2 gap-2">
-                            <div class="p-2.5 rounded-lg bg-canvas-card border border-canvas-border text-slate-300 flex items-center gap-2">
-                                <i class="fa-solid fa-briefcase text-canvas-canRed text-xs"></i> Business Letter
+                    <div class="bg-canvas-bg rounded-xl p-3.5 sm:p-4 border border-canvas-border space-y-2.5 font-mono text-[11px] sm:text-xs">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div class="p-2.5 rounded-lg bg-canvas-card border border-canvas-border text-slate-300 flex items-center gap-2 truncate">
+                                <i class="fa-solid fa-briefcase text-canvas-canRed text-xs flex-shrink-0"></i> <span class="truncate">Business Letter</span>
                             </div>
-                            <div class="p-2.5 rounded-lg bg-canvas-card border border-canvas-border text-slate-300 flex items-center gap-2">
-                                <i class="fa-solid fa-utensils text-canvas-gold text-xs"></i> Recipe Log
+                            <div class="p-2.5 rounded-lg bg-canvas-card border border-canvas-border text-slate-300 flex items-center gap-2 truncate">
+                                <i class="fa-solid fa-utensils text-canvas-gold text-xs flex-shrink-0"></i> <span class="truncate">Recipe Log</span>
                             </div>
                         </div>
-                        <div class="p-2 rounded bg-canvas-card/50 text-[11px] text-slate-500 text-center">
+                        <div class="p-2 rounded bg-canvas-card/50 text-[10px] sm:text-[11px] text-slate-500 text-center">
                             Instant one-click document template injection
                         </div>
                     </div>
                 </div>
 
                 <!-- Feature 3: Local Storage & Vault -->
-                <div class="glass-panel rounded-2xl p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:border-canvas-gold/40 transition-all group">
+                <div class="glass-panel rounded-2xl p-5 sm:p-8 flex flex-col justify-between space-y-6 hover:border-canvas-gold/40 transition-all group">
                     <div class="space-y-3">
                         <div class="flex items-center justify-between">
                             <span class="font-mono text-[10px] text-canvas-gold bg-canvas-gold/10 border border-canvas-gold/30 px-2.5 py-1 rounded-md uppercase font-bold">Module 03</span>
                             <i class="fa-solid fa-hard-drive text-canvas-gold"></i>
                         </div>
-                        <h4 class="font-serif text-lg text-white">Local Vault & Storage Manager</h4>
-                        <p class="font-editorial text-sm text-slate-400 leading-relaxed">
+                        <h4 class="font-serif text-base sm:text-lg text-white">Local Vault & Storage Manager</h4>
+                        <p class="font-editorial text-xs sm:text-sm text-slate-400 leading-relaxed">
                             Privacy-first local storage engine with automatic background draft saving, instant Markdown (.md) and HTML file exports, and seamless document import.
                         </p>
                     </div>
 
                     <!-- Visual Code-Logic Preview Card -->
-                    <div class="bg-canvas-bg rounded-xl p-4 border border-canvas-border space-y-2.5 font-mono text-xs">
-                        <div class="flex items-center justify-between p-2.5 rounded-lg bg-canvas-card border border-canvas-border">
-                            <span class="text-emerald-400 flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Saved locally
+                    <div class="bg-canvas-bg rounded-xl p-3.5 sm:p-4 border border-canvas-border space-y-2.5 font-mono text-[11px] sm:text-xs">
+                        <div class="flex items-center justify-between p-2.5 rounded-lg bg-canvas-card border border-canvas-border gap-2">
+                            <span class="text-emerald-400 flex items-center gap-2 truncate">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0"></span> <span class="truncate">Saved locally</span>
                             </span>
-                            <span class="text-slate-400">Ctrl+S Ready</span>
+                            <span class="text-slate-400 flex-shrink-0">Ctrl+S Ready</span>
                         </div>
                         <div class="grid grid-cols-2 gap-2">
-                            <div class="p-2 rounded bg-canvas-card text-center text-slate-300 border border-canvas-border">Export HTML</div>
-                            <div class="p-2 rounded bg-canvas-card text-center text-slate-300 border border-canvas-border">Export Markdown</div>
+                            <div class="p-2 rounded bg-canvas-card text-center text-slate-300 border border-canvas-border truncate">Export HTML</div>
+                            <div class="p-2 rounded bg-canvas-card text-center text-slate-300 border border-canvas-border truncate">Export Markdown</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Feature 4: Quick Research Tools -->
-                <div class="glass-panel rounded-2xl p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:border-canvas-gold/40 transition-all group">
+                <div class="glass-panel rounded-2xl p-5 sm:p-8 flex flex-col justify-between space-y-6 hover:border-canvas-gold/40 transition-all group">
                     <div class="space-y-3">
                         <div class="flex items-center justify-between">
                             <span class="font-mono text-[10px] text-canvas-gold bg-canvas-gold/10 border border-canvas-gold/30 px-2.5 py-1 rounded-md uppercase font-bold">Module 04</span>
                             <i class="fa-solid fa-magnifying-glass text-canvas-gold"></i>
                         </div>
-                        <h4 class="font-serif text-lg text-white">Quick Research & Search Tools</h4>
-                        <p class="font-editorial text-sm text-slate-400 leading-relaxed">
+                        <h4 class="font-serif text-base sm:text-lg text-white">Quick Research & Search Tools</h4>
+                        <p class="font-editorial text-xs sm:text-sm text-slate-400 leading-relaxed">
                             Integrated search lookup shortcuts designed to instantly query Google or Pinterest directly from the workspace sidebar without breaking focus.
                         </p>
                     </div>
 
                     <!-- Visual Code-Logic Preview Card -->
-                    <div class="bg-canvas-bg rounded-xl p-4 border border-canvas-border space-y-2.5 font-mono text-xs">
-                        <div class="p-2.5 rounded-lg bg-canvas-card border border-canvas-border text-slate-400">
+                    <div class="bg-canvas-bg rounded-xl p-3.5 sm:p-4 border border-canvas-border space-y-2.5 font-mono text-[11px] sm:text-xs">
+                        <div class="p-2.5 rounded-lg bg-canvas-card border border-canvas-border text-slate-400 truncate">
                             Search recipe or topic...
                         </div>
                         <div class="grid grid-cols-2 gap-2">
-                            <div class="p-2 rounded bg-canvas-card text-center text-slate-300 border border-canvas-border"><i class="fa-solid fa-search mr-1"></i> Google</div>
-                            <div class="p-2 rounded bg-canvas-card text-center text-slate-300 border border-canvas-border"><i class="fa-solid fa-thumbtack mr-1"></i> Pinterest</div>
+                            <div class="p-2 rounded bg-canvas-card text-center text-slate-300 border border-canvas-border truncate"><i class="fa-solid fa-search mr-1"></i> Google</div>
+                            <div class="p-2 rounded bg-canvas-card text-center text-slate-300 border border-canvas-border truncate"><i class="fa-solid fa-thumbtack mr-1"></i> Pinterest</div>
                         </div>
                     </div>
                 </div>
@@ -254,8 +255,8 @@
     </main>
 
     <!-- Archival Footer -->
-    <footer class="border-t border-canvas-border bg-canvas-bg py-8 px-6 text-center font-mono text-xs text-canvas-muted">
-        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+    <footer class="border-t border-canvas-border bg-canvas-bg py-8 px-4 sm:px-6 text-center font-mono text-[10px] sm:text-xs text-canvas-muted">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
             <div>CANVAS DE CANADA // ARCHIVAL EXHIBITION</div>
             <div>BUILDING FOUNDATIONAL UTILITIES FOR PERSONAL STANDARDS</div>
         </div>
